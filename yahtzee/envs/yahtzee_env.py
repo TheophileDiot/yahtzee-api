@@ -3,7 +3,7 @@
 import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
-from yahtzee.utils.game import Game
+from yahtzee.api.game import Game
 
 
 class Yahtzee(gym.Env):

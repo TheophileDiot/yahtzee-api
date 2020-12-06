@@ -5,38 +5,42 @@ import random
 class Player:
     def __init__(self, player_name):
         self.player_name = player_name
-        self.scorecard = {
-            "ones": 0,
-            "twos": 0,
-            "threes": 0,
-            "fours": 0,
-            "fives": 0,
-            "sixes": 0,
-            "bonus": 0,
-            "three_kind": 0,
-            "four_kind": 0,
-            "full_house": 0,
-            "sm_straight": 0,
-            "lg_straight": 0,
-            "yahtzee": 0,
-            "chance": 0
-        }
-        self.theoretical_scorecard = {      # Scorecard that is calculated after each dice roll to see what scores are possible given that roll
-            "ones": 0,
-            "twos": 0,
-            "threes": 0,
-            "fours": 0,
-            "fives": 0,
-            "sixes": 0,
-            "bonus": 0,
-            "three_kind": 0,
-            "four_kind": 0,
-            "full_house": 0,
-            "sm_straight": 0,
-            "lg_straight": 0,
-            "yahtzee": 0,
-            "chance": 0
-        }                 
+        # Scorecard follows the order of a real yahtzee scorecard, starting with 1's and ending with chance. The bonus is excluded because it is calculated at the end of the game.
+        # Each tuple has the following structure: [score, [dice used to get score], number of rolls].
+        self.scorecard = [
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+        ]
+        # This is calculated after every dice roll and shows the possible scores should the algorithm decide to stop rolling and choose one. 
+        # Values are only calculated for scores that are empty as of the current turn. This is simply to expose every possible state of the scorecard based on the current roll
+        # and status of the game to that point for an algorithm to make decisions.
+        self.theoretical_scorecard = [
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+        ]
+                  
         self.bonus = False                  # Did player get bonus by having >=63 points on top half of scorecard
         self.rolled_dice = []               # Result of the last roll of the dice
         self.frozen_dice = []               # Dice that are not re-rolled
@@ -62,11 +66,12 @@ class Player:
     # Rolls proper number of dice, based on current value of num_dice
     def roll_dice(self):
         if self.rolls_left > 0:
-            self.rest_theoretical_scorecard()
+            self.reset_theoretical_scorecard()
             self.rolled_dice = [random.randint(1, 6) for i in range(self.num_dice)]
+            self.rolls_left -= 1
             self.combine_dice()
             self.calculate_theoretical_scorecard()
-            self.rolls_left -= 1
+
         else:
             raise Exception("Error in Player.roll(): No rolls remaining.")
 
@@ -86,23 +91,22 @@ class Player:
         self.rolls_left = 3 
     
     # Reset theoretical scorecard
-    def rest_theoretical_scorecard(self):
-        self.theoretical_scorecard = { 
-            "ones": 0,
-            "twos": 0,
-            "threes": 0,
-            "fours": 0,
-            "fives": 0,
-            "sixes": 0,
-            "bonus": 0,
-            "three_kind": 0,
-            "four_kind": 0,
-            "full_house": 0,
-            "sm_straight": 0,
-            "lg_straight": 0,
-            "yahtzee": 0,
-            "chance": 0
-        }
+    def reset_theoretical_scorecard(self):
+        self.theoretical_scorecard = [
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+            [0, [], 0],
+        ]
 
     #-------------------------------------------------------------------------------------------------#
     # The following are computation methods to calculate the potential points for each entry in the scorecard based on the current roll of the dice and the frozen dice. 
@@ -110,54 +114,55 @@ class Player:
     # Then, the theoretical scorecard configuration for each entry is presented to whatever algorithm is being simulated. The algorithm makes the choice, and the appropriate dice are frozen. 
     #-------------------------------------------------------------------------------------------------#
 
-    # Calculate top half of scorecard (items above the bonus)
+    # Calculate top half of scorecard (items above the bonus on a real yahtzee card)
     def calculate_top_half(self):
-        # A very ugly way to iterate over the first 6 entries in the dictionary and make the relevant score calculations
-        i = 1
-        for key in self.theoretical_scorecard:
-            total_score = 0
-            for die in self.combined_dice:
-                if die == i:
-                    total_score += die
-            self.theoretical_scorecard[key] = total_score
-            i += 1
-            if i > 6: 
-                return 
+        # Loop through 1's --> 6's
+        for i in range(6):
+            # Checks if scorecard entry has not been scored yet. Looks at # of rolls because it is possible to score a 0 on an entry after 3 rolls.
+            if self.scorecard[i][2] == 0:
+                # Score the relevant dice and store the related data in the corresponding entry in the theoretical scorecard
+                current_dice = [x for x in self.combined_dice if x == i + 1]
+                self.theoretical_scorecard[i][0] = sum(current_dice)
+                self.theoretical_scorecard[i][1] = current_dice
+                self.theoretical_scorecard[i][2] = 3 - self.rolls_left                
 
     # Calculate three of a kind value based on current roll/frozen dice combo
     def calculate_three_kind(self):
-        for i in range(1, 7):
-            count = 0
-            for die in self.combined_dice:
-                if die == i:
-                    count += 1
-                # In a set of 5 dice, there can only be 1 three of a kind, so as soon as one is found set the score and return from this function
-                if count == 3:
-                    self.theoretical_scorecard["three_kind"] = 3 * i
+        if self.scorecard[6][2] == 0:
+            # Check for a three of kind for each possible value of the dice
+            for i in range(1, 7):
+                current_dice = [x for x in self.combined_dice if x == i]
+                if len(current_dice) == 3:
+                    self.theoretical_scorecard[6][0] = sum(current_dice)
+                    self.theoretical_scorecard[6][1] = current_dice
+                    self.theoretical_scorecard[6][2] = 3 - self.rolls_left
                     return
+            self.theoretical_scorecard[6][2] = 3 - self.rolls_left
 
     # Calculate four of a kind value based on current roll/frozen dice combo
     def calculate_four_kind(self):
-        for i in range(1, 7):
-            count = 0
-            for die in self.combined_dice:
-                if die == i:
-                    count += 1
-                # In a set of 5 dice, there can only be 1 four of a kind, so as soon as one is found set the score and return from this function
-                if count == 4:
-                    self.theoretical_scorecard["four_kind"] = 4 * i
+        if self.scorecard[7][2] == 0:
+            # Check for a four of kind for each possible value of the dice
+            for i in range(1, 7):
+                current_dice = [x for x in self.combined_dice if x == i]
+                if len(current_dice) == 4:
+                    self.theoretical_scorecard[7][0] = sum(current_dice)
+                    self.theoretical_scorecard[7][1] = current_dice
+                    self.theoretical_scorecard[7][2] = 3 - self.rolls_left
                     return
+            self.theoretical_scorecard[7][2] = 3 - self.rolls_left
 
     # Calculate full house based on current roll/frozen dice combo
     def calculate_full_house(self):
-        # Leveraging the fact that the dice are sorted, just check if first 2 are the same and the last 3 are the same or vice versa and that all 5 are not the same
-        if ((self.combined_dice[0] == self.combined_dice[1] and self.combined_dice[2] == self.combined_dice[4]) or \
-            (self.combined_dice[0] == self.combined_dice[2] and self.combined_dice[3] == self.combined_dice[4])) and \
-            self.combined_dice[0] != self.combined_dice[4]:
-            self.theoretical_scorecard["full_house"] = 25
-
+        if self.scorecard[8][2] == 0:
+            # Leveraging the fact that the dice are sorted, just check if first 2 are the same and the last 3 are the same or vice versa and that all 5 are not the same
+            if ((self.combined_dice[0] == self.combined_dice[1] and self.combined_dice[2] == self.combined_dice[4]) or \
+                (self.combined_dice[0] == self.combined_dice[2] and self.combined_dice[3] == self.combined_dice[4])) and \
+                self.combined_dice[0] != self.combined_dice[4]:
+                self.theoretical_scorecard[8][0] = 25
+                self.theoretical_scorecard[8][1] = self.combined_dice
+            self.theoretical_scorecard[8][2] = 3 - self.rolls_left
     # Calculate small straight based on current roll/frozen dice combo
-    # There is definitely a cleaner way to do this, will revisit in the future
     def calculate_small_straight(self):
         # Remove duplicates from combined dice to remove edge cases from small straight test (i.e., [2, 3, 3, 4, 5]) then check that there are still at least 4 dice
         temp_dice = list(dict.fromkeys(self.combined_dice))
@@ -166,11 +171,15 @@ class Player:
             for i in range(2):
                 if temp_dice[i + 1] == temp_dice[i] + 1 and temp_dice[i + 2] == temp_dice[i + 1] + 1 and \
                     temp_dice[i + 3] == temp_dice[i + 2] + 1:
-                    self.theoretical_scorecard["sm_straight"] = 30
+                    self.theoretical_scorecard[9][0] = 30
+                    self.theoretical_scorecard[9][1] = temp_dice[i:]
+            self.theoretical_scorecard[9][2] = 3 - self.rolls_left
         elif len(temp_dice) == 4:
             # Small straight in sorted list of 4 must start at position 0
             if temp_dice[0 + 1] == temp_dice[0] + 1 and temp_dice[2] == temp_dice[1] + 1 and temp_dice[3] == temp_dice[2] + 1:
-                self.theoretical_scorecard["sm_straight"] = 30
+                self.theoretical_scorecard[9][0] = 30
+                self.theoretical_scorecard[9][1] = temp_dice
+            self.theoretical_scorecard[9][2] = 3 - self.rolls_left
         else:
             return
 
@@ -178,16 +187,22 @@ class Player:
     def calculate_large_straight(self):
         if self.combined_dice[1] == self.combined_dice[0] + 1 and self.combined_dice[2] == self.combined_dice[1] + 1 and \
             self.combined_dice[3] == self.combined_dice[2] + 1 and self.combined_dice[4] == self.combined_dice[3] + 1:
-            self.theoretical_scorecard["lg_straight"] = 40
+            self.theoretical_scorecard[10][0] = 40
+            self.theoretical_scorecard[10][1] = self.combined_dice
+        self.theoretical_scorecard[10][2] = 3 - self.rolls_left
             
     # Calculate Yahtzee based on current roll/frozen dice combo
     def calculate_yahtzee(self):
         if self.combined_dice[0] == self.combined_dice[-1]:
-            self.theoretical_scorecard["yahtzee"] = 50
+            self.theoretical_scorecard[11][0] = 50
+            self.theoretical_scorecard[11][1] = self.combined_dice
+        self.theoretical_scorecard[11][2] = 3 - self.rolls_left
 
     # Calculate Chance value
     def calculate_chance(self):
-        self.theoretical_scorecard["chance"] = sum(self.combined_dice)
+        self.theoretical_scorecard[12][0] = sum(self.combined_dice)
+        self.theoretical_scorecard[12][1] = self.combined_dice
+        self.theoretical_scorecard[12][2] = 3 - self.rolls_left
 
     # Use all calculation methods to produce the theoretical scorecard for a given roll
     def calculate_theoretical_scorecard(self):
@@ -206,10 +221,10 @@ class Player:
 
     # Print out the player's scorecard line by line
     def print_scorecard(self):
-        for category in self.scorecard:
-            print(category, ':', self.scorecard[category])
+        for i in range(13):
+            print(self.scorecard[i])
 
     # Print out the player's theoretical scorecard line by line baesd on their last roll
     def print_theoretical_scorecard(self):
-        for category in self.theoretical_scorecard:
-            print(category, ':', self.theoretical_scorecard[category])
+        for i in range(13):
+            print(self.theoretical_scorecard[i])
