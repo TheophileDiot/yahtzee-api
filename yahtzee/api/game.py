@@ -1,23 +1,34 @@
-# Game object class to manage the larger game structure (advancing turns, etc.). Currently supports 2 player games, may be generalized in the future.
+# Game object class to manage the larger game structure (advancing turns, etc.).
 
 from .player import Player
 
 class Game:
-    def __init__(self):
-        self.players = [Player("P1"), Player("P2")]
+    def __init__(self, num_players):
+        self.players = [Player("P" + str(i + 1)) for i in range(num_players)]
         self.remaining_turns = 13
         self.current_player = self.players[0].player_name
+        self.num_players = num_players
+
+
+    #-------------------------------------------------------------------------------------#
+    # Basic functionality methods
+    #-------------------------------------------------------------------------------------#
 
     # Reset game to start state
     def reset_game(self):
-        self.players = [Player("P1"), Player("P2")]
+        self.players = [Player("P" + str(i + 1)) for i in range(self.num_players)]
         self.remaining_turns = 13
         self.current_player = self.players[0].player_name
 
-    # Global turns, so once all players have completed the current turn, move to the next
+    # Advance global turn
     def next_turn(self):
         self.remaining_turns -= 1
         self.current_player = self.players[0]
+
+
+    #-------------------------------------------------------------------------------------#
+    # Debugging methods
+    #-------------------------------------------------------------------------------------#
 
     # Print out current status of the game
     def print_status(self):
