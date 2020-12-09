@@ -27,7 +27,9 @@ jobs:
           
       - name: Build
         run: |
+          pipenv run make clean
           pipenv run make html
+        working-directory: docs
       
       - name: Vale Tests
         uses: errata-ai/vale-action@v1.3.0
