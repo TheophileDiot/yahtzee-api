@@ -4,7 +4,7 @@ import random
 import copy
 
 class Player:
-    """Stores  information about each player's current status including score, theoretical score, rolls remaining in their turn, and the status of their last roll.
+    """Stores information about each player's current status including score, theoretical score, rolls remaining in their turn, and the status of their last roll.
     
     This class tracks the data associated with each player, and additionally performs all scoring calculations including all possible scores based on the current 
     configuration of the dice and their scorecard. 
@@ -124,14 +124,18 @@ class Player:
         Raises:
             ValueError: If the number of rolls remaining is less than or equal to 0.
             ValueError: If the length of dice_to_roll is not 5.
+            TypeError: If the dice_to_roll list does not contain only bool values.
             TypeError: If dice_to_roll is not a list.
         """
         if self.rolls_left <= 0:
             raise ValueError("ValueError in Player.roll_dice(): No rolls remaining.")
         if len(dice_to_roll) != 5:
             raise ValueError("ValueError in Player.roll_dice(): dice_to_roll argument must be a list of length 5.")
+        if len([x for x in dice_to_roll if not isinstance(x, bool)]) != 0:
+            raise TypeError("TypeError in Player.roll_dice(): dice_to_roll argument must contain only boolean values.")
         if not isinstance(dice_to_roll, list):
             raise TypeError("TypeError in Player.roll_dice(): dice_to_roll must be of type list.")
+
         for i in range(5):
             if dice_to_roll[i] == True:
                 self.dice[i] = random.randint(1, 6)
@@ -147,7 +151,12 @@ class Player:
         
         Args:
             score_type (int): Index of the scorecard entry that the player has chosen to score for this round. 
+        Raises:
+            ValueError: If score_type is not between 0 and 12.
         """
+        if score_type < 0 or score_type > 12:
+            raise ValueError("ValueError in Player.end_turn(): score_type must be between 0 and 12, inclusive.")
+            
         self.scorecard[score_type][0] = self._theoretical_scorecard[score_type][0]
         self.scorecard[score_type][1] = self.dice
         self.scorecard[score_type][2] = 3 - self.rolls_left
@@ -168,86 +177,6 @@ class Player:
             self.score += entry[0]
         self._calculate_bonus()
 
-    def print_scorecard(self):
-        """Prints out the player's scorecard line by line.
-        
-        Scorecard indices are as follows:
-
-           [0]: 1's
-
-           [1]: 2's
-
-           [2]: 3's
-
-           [3]: 4's
-
-           [4]: 5's
-
-           [5]: 6's
-
-           [6]: Three of a Kind
-
-           [7]: Four of a Kind
-
-           [8]: Full House
-
-           [9]: Small Straight
-
-           [10]: Large Straight
-
-           [11]: Yahtzee
-
-           [12]: Chance
-
-        The list in position [1] of each sublist contains the values of the 5 dice rolled to achieve the associated score.
-
-        The integer in position [2] of each sublist represents the number of rolls used to obtain that score.
-         """
-        print("Scorecard:")
-        for i in range(13):
-            print(self.scorecard[i])
-        print("\n")
-
-    def print_theoretical_scorecard(self):
-        """Prints out the player's theoretical scorecard line by line baesd on their last roll.
-        
-        Theoretical Scorecard indices are as follows:
-
-           [0]: 1's
-
-           [1]: 2's
-
-           [2]: 3's
-
-           [3]: 4's
-
-           [4]: 5's
-
-           [5]: 6's
-
-           [6]: Three of a Kind
-
-           [7]: Four of a Kind
-
-           [8]: Full House
-
-           [9]: Small Straight
-
-           [10]: Large Straight
-
-           [11]: Yahtzee
-
-           [12]: Chance
-
-        The list in position [1] of each sublist contains the values of the indices of the dice used to calculate the associated score.
-
-        The integer in position [2] of each sublist represents the number of rolls used to obtain that score.
-        """
-        print("Theoretical Scorecard:")
-        for i in range(13):
-            print(self._theoretical_scorecard[i])
-        print("\n")
-
     def print_player_info(self):
         """Prints player's entire information."""
         print(self.player_name)
@@ -255,6 +184,20 @@ class Player:
         print(self.rolls_left)
         self.print_scorecard()
         self.print_theoretical_scorecard()
+    
+    def print_scorecard(self):
+        """Prints out the player's scorecard line by line."""
+        print("Scorecard:")
+        for i in range(13):
+            print(self.scorecard[i])
+        print("\n")
+
+    def print_theoretical_scorecard(self):
+        """Prints out the player's theoretical scorecard line by line baesd on their last roll."""
+        print("Theoretical Scorecard:")
+        for i in range(13):
+            print(self._theoretical_scorecard[i])
+        print("\n")
 
     def _reset_theoretical_scorecard(self):
         """Resets the theoretical scorecard. Called after each roll of the dice."""
@@ -287,25 +230,25 @@ class Player:
         """Calculates three of a kind value based on the current roll and store result in the theoretical scorecard."""
         if self.scorecard[6][2] == 0:                                               # Checks if scorecard entry has not been scored yet. Looks at # of rolls because it is possible to score a 0 on an entry after 3 rolls.
             for i in range(6):                                                      # For each die value, look for three of a kind, store the indices of the dice in the dice_indices array, and update theoretical scorecard.
-                dice_indices = [j for j in range(5) if self.dice[j] == i + 1]     # Store the index of the dice used to score the given value.
+                dice_indices = [j for j in range(5) if self.dice[j] == i + 1]       # Store the index of the dice used to score the given value.
                 if len(dice_indices) == 3:                                          # Only one three of a kind can exist, so once it is found update the theoretical scorecard and return from the function.
                     self._theoretical_scorecard[6][0] = 3 * (i + 1)
                     self._theoretical_scorecard[6][1] = dice_indices
                     self._theoretical_scorecard[6][2] = 3 - self.rolls_left
                     return
-            self._theoretical_scorecard[6][2] = 3 - self.rolls_left              # Set the rolls used even if we don't have a three of a kind to keep track of how many it actually takes.
+            self._theoretical_scorecard[6][2] = 3 - self.rolls_left                 # Set the rolls used even if we don't have a three of a kind to keep track of how many it actually takes.
 
     def _calculate_four_kind(self):
         """Calculates four of a kind value based on the current roll and store result in the theoretical scorecard."""
         if self.scorecard[7][2] == 0:                                               # Checks if scorecard entry has not been scored yet. Looks at # of rolls because it is possible to score a 0 on an entry after 3 rolls.
             for i in range(6):                                                      # For each die value, look for four of a kind, store the indices of the dice in the dice_indices array, and update theoretical scorecard.
-                dice_indices = [j for j in range(5) if self.dice[j] == i + 1]     # Store the index of the dice used to score the given value.
+                dice_indices = [j for j in range(5) if self.dice[j] == i + 1]       # Store the index of the dice used to score the given value.
                 if len(dice_indices) == 4:                                          # Only one four of a kind can exist, so once it is found update the theoretical scorecard and return from the function.
                     self._theoretical_scorecard[7][0] = 4 * (i + 1)
                     self._theoretical_scorecard[7][1] = dice_indices
                     self._theoretical_scorecard[7][2] = 3 - self.rolls_left
                     return
-            self._theoretical_scorecard[7][2] = 3 - self.rolls_left              # Set the rolls used even if we don't have a four of a kind to keep track of how many it actually takes.
+            self._theoretical_scorecard[7][2] = 3 - self.rolls_left                 # Set the rolls used even if we don't have a four of a kind to keep track of how many it actually takes.
 
     def _calculate_full_house(self):
         """Calculates full house based on current roll (uses sorted dice) and store result in the theoretical scorecard.

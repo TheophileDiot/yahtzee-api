@@ -58,9 +58,11 @@ class Game:
         for player in self.players:
             player.calculate_final_score()
             player.print_scorecard()
-            player.print_final_score()
             final_scores.append(player.score)
+        self._make_winner(final_scores)
 
+    def _make_winner(self, final_scores):
+        """Determines the winner (or tie) of the game."""
         winner = [player for player in self.players if player.score == max(final_scores)]
         if len(winner) == 1: 
             self.winner = winner[0]
