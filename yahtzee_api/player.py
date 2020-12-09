@@ -1,7 +1,4 @@
-"""Module containing the Player class.
-
-Author: Tom Arbeiter
-"""
+"""Module containing the Player class."""
 
 import random
 import copy
@@ -15,8 +12,65 @@ class Player:
     Attributes:
         player_name (str): A string containing the name of the player.
         score (int): An integer value indicating the point total for the player (calculated at the end of the game).
-        scorecard (list): A list tracking each row of a Yahtzee scorecard according to the following structure: [score, [dice used to get score], number of rolls].
-        theoretical_scorecard (list): A list tracking each row of a Yahtzee scorecard, calculated after each roll, according to the following structure: [score, [indices in self.dice of dice used to get score], number of rolls].
+        scorecard (list): A list of lists tracking each row of a Yahtzee scorecard with each row of the card following this structure: [score, [dice used to get score], number of rolls].
+            
+            Scorecard indices are as follows:
+
+            [0]: 1's
+
+            [1]: 2's
+
+            [2]: 3's
+
+            [3]: 4's
+
+            [4]: 5's
+
+            [5]: 6's
+
+            [6]: Three of a Kind
+
+            [7]: Four of a Kind
+
+            [8]: Full House
+
+            [9]: Small Straight
+
+            [10]: Large Straight
+
+            [11]: Yahtzee
+
+            [12]: Chance
+
+        theoretical_scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure: [score, [indices in self.dice of dice used to get score], number of rolls].
+            Theoretical Scorecard indices are as follows:
+            
+            [0]: 1's
+
+            [1]: 2's
+
+            [2]: 3's
+
+            [3]: 4's
+
+            [4]: 5's
+
+            [5]: 6's
+
+            [6]: Three of a Kind
+
+            [7]: Four of a Kind
+
+            [8]: Full House
+
+            [9]: Small Straight
+
+            [10]: Large Straight
+
+            [11]: Yahtzee
+
+            [12]: Chance
+
         dice (list): A list of the 5 dice in play - index is preserved throughout calculations.
     """
     def __init__(self, player_name):
@@ -68,7 +122,7 @@ class Player:
             dice_to_roll (list): A list of length 5 containing boolean values where "True" indicates the die in that position should be rolled.
         
         Raises:
-            ValueError: If the number of rolls remaining less than or equal to 0.
+            ValueError: If the number of rolls remaining is less than or equal to 0.
             ValueError: If the length of dice_to_roll is not 5.
             TypeError: If dice_to_roll is not a list.
         """
@@ -118,18 +172,31 @@ class Player:
         """Prints out the player's scorecard line by line.
         
         Scorecard indices are as follows:
+
            [0]: 1's
+
            [1]: 2's
+
            [2]: 3's
+
            [3]: 4's
+
            [4]: 5's
+
            [5]: 6's
+
            [6]: Three of a Kind
+
            [7]: Four of a Kind
+
            [8]: Full House
+
            [9]: Small Straight
+
            [10]: Large Straight
+
            [11]: Yahtzee
+
            [12]: Chance
 
         The list in position [1] of each sublist contains the values of the 5 dice rolled to achieve the associated score.
@@ -145,18 +212,31 @@ class Player:
         """Prints out the player's theoretical scorecard line by line baesd on their last roll.
         
         Theoretical Scorecard indices are as follows:
+
            [0]: 1's
+
            [1]: 2's
+
            [2]: 3's
+
            [3]: 4's
+
            [4]: 5's
+
            [5]: 6's
+
            [6]: Three of a Kind
+
            [7]: Four of a Kind
+
            [8]: Full House
+
            [9]: Small Straight
+
            [10]: Large Straight
+
            [11]: Yahtzee
+
            [12]: Chance
 
         The list in position [1] of each sublist contains the values of the indices of the dice used to calculate the associated score.
@@ -169,7 +249,7 @@ class Player:
         print("\n")
 
     def print_player_info(self):
-        """Prints out player's entire information"""
+        """Prints player's entire information."""
         print(self.player_name)
         print(self.dice)
         print(self.rolls_left)
@@ -195,7 +275,7 @@ class Player:
         ]
 
     def _calculate_top_half(self):
-        """Calculate values for 1's --> 6's based on the current roll and store result in the theoretical scorecard."""
+        """Calculates values for 1's --> 6's based on the current roll and store result in the theoretical scorecard."""
         for i in range(6):                                                          
             if self.scorecard[i][2] == 0:                                           # Checks if scorecard entry has not been scored yet. Looks at # of rolls because it is possible to score a 0 on an entry after 3 rolls.
                 dice_indices = [j for j in range(5) if self.dice[j] == i + 1]     # Store the index of the dice used to score the given value.
@@ -204,7 +284,7 @@ class Player:
                 self._theoretical_scorecard[i][2] = 3 - self.rolls_left                
 
     def _calculate_three_kind(self):
-        """Calculate three of a kind value based on the current roll and store result in the theoretical scorecard."""
+        """Calculates three of a kind value based on the current roll and store result in the theoretical scorecard."""
         if self.scorecard[6][2] == 0:                                               # Checks if scorecard entry has not been scored yet. Looks at # of rolls because it is possible to score a 0 on an entry after 3 rolls.
             for i in range(6):                                                      # For each die value, look for three of a kind, store the indices of the dice in the dice_indices array, and update theoretical scorecard.
                 dice_indices = [j for j in range(5) if self.dice[j] == i + 1]     # Store the index of the dice used to score the given value.
@@ -216,7 +296,7 @@ class Player:
             self._theoretical_scorecard[6][2] = 3 - self.rolls_left              # Set the rolls used even if we don't have a three of a kind to keep track of how many it actually takes.
 
     def _calculate_four_kind(self):
-        """Calculate four of a kind value based on the current roll and store result in the theoretical scorecard."""
+        """Calculates four of a kind value based on the current roll and store result in the theoretical scorecard."""
         if self.scorecard[7][2] == 0:                                               # Checks if scorecard entry has not been scored yet. Looks at # of rolls because it is possible to score a 0 on an entry after 3 rolls.
             for i in range(6):                                                      # For each die value, look for four of a kind, store the indices of the dice in the dice_indices array, and update theoretical scorecard.
                 dice_indices = [j for j in range(5) if self.dice[j] == i + 1]     # Store the index of the dice used to score the given value.
@@ -228,7 +308,7 @@ class Player:
             self._theoretical_scorecard[7][2] = 3 - self.rolls_left              # Set the rolls used even if we don't have a four of a kind to keep track of how many it actually takes.
 
     def _calculate_full_house(self):
-        """Calculate full house based on current roll (uses sorted dice) and store result in the theoretical scorecard.
+        """Calculates full house based on current roll (uses sorted dice) and store result in the theoretical scorecard.
         
         Leverages the fact that the dice are sorted, so just check if first 2 are the same and the last 3 are the same or vice versa, and that all 5 are not the same.
         """
@@ -241,7 +321,7 @@ class Player:
             self._theoretical_scorecard[8][2] = 3 - self.rolls_left                                                      # Set the rolls used even if we don't have a full house to keep track of how many it actually takes.
 
     def _calculate_small_straight(self):
-        """Calculate small straight based on current roll (uses sorted dice and additionally removes duplicates) and store result in the theoretical scorecard."""
+        """Calculates small straight based on current roll (uses sorted dice and additionally removes duplicates) and store result in the theoretical scorecard."""
         if self.scorecard[9][2] == 0:
             temp_dice = copy.deepcopy(list(dict.fromkeys(self._sorted_dice)))                                            # Remove duplicates from combined dice to remove edge cases from small straight test (i.e., [2, 3, 3, 4, 5]) then check that there are still at least 4 dice.
             if len(temp_dice) == 5:                                                                                         
@@ -261,7 +341,7 @@ class Player:
                 self._theoretical_scorecard[9][2] = 3 - self.rolls_left
 
     def _calculate_large_straight(self):
-        """Calculate large straight based on current roll (uses sorted dice) and store result in theoretical scorecard."""
+        """Calculates large straight based on current roll (uses sorted dice) and store result in theoretical scorecard."""
         if self.scorecard[10][2] == 0:
             if self._sorted_dice[1] == self._sorted_dice[0] + 1 and self._sorted_dice[2] == self._sorted_dice[1] + 1 and \
                 self._sorted_dice[3] == self._sorted_dice[2] + 1 and self._sorted_dice[4] == self._sorted_dice[3] + 1:
@@ -270,7 +350,7 @@ class Player:
             self._theoretical_scorecard[10][2] = 3 - self.rolls_left                                                    # Set the rolls used even if we don't have a large straight to keep track of how many it actually takes.
 
     def _calculate_yahtzee(self):
-        """Calculate Yahtzee based on current roll/frozen dice combo (uses sorted dice) and store result in theoretical scorecard."""
+        """Calculates Yahtzee based on current roll/frozen dice combo (uses sorted dice) and store result in theoretical scorecard."""
         if self.scorecard[11][2] == 0:
             if self._sorted_dice[0] == self._sorted_dice[-1]:
                 self._theoretical_scorecard[11][0] = 50
@@ -278,14 +358,14 @@ class Player:
             self._theoretical_scorecard[11][2] = 3 - self.rolls_left             # Set the rolls used even if we don't have a yahtzee to keep track of how many it actually takes.
 
     def _calculate_chance(self):
-        """Calculate chance value and store result in theoretical scorecard."""
+        """Calculates chance value and store result in theoretical scorecard."""
         if self.scorecard[12][2] == 0:
             self._theoretical_scorecard[12][0] = sum(self.dice)
             self._theoretical_scorecard[12][1] = [0, 1, 2, 3, 4]
             self._theoretical_scorecard[12][2] = 3 - self.rolls_left
 
     def _calculate_bonus(self):
-        """Determine if Player has earned the top-half bonus by scoring at least 63 points on the first 6 scorecard entries.
+        """Determines if Player has earned the top-half bonus by scoring at least 63 points on the first 6 scorecard entries.
         
         Function is called at the end of the game when the final score is being tallied.
         """
@@ -296,7 +376,7 @@ class Player:
             self.score += 35
 
     def _calculate_yahtzee_bonus(self):
-        """Add Yahtzee bonus to Player's total score.
+        """Adds Yahtzee bonus to Player's total score when earned.
         
         Yahtzee bonus is earned by rolling more than one Yahtzee in a single game and is worth 100 points.
         """

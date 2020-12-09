@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Yahtzee API &mdash; Yahtzee API 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Yahtzee API
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Yahtzee API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-yahtzee_api.game">Yahtzee API Class: Game</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-yahtzee_api.player">Yahtzee API Class: Player</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yahtzee API</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Yahtzee API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/yahtzee_api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="yahtzee-api">
+<h1>Yahtzee API<a class="headerlink" href="#yahtzee-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-yahtzee_api.game">
+<span id="yahtzee-api-class-game"></span><h2>Yahtzee API Class: Game<a class="headerlink" href="#module-yahtzee_api.game" title="Permalink to this headline">¶</a></h2>
+<p>Module containing the Game class.</p>
+<dl class="class">
+<dt id="yahtzee_api.game.Game">
+<em class="property">class </em><code class="sig-prename descclassname">yahtzee_api.game.</code><code class="sig-name descname">Game</code><span class="sig-paren">(</span><em class="sig-param">num_players</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents the larger game structure for Yahtzee.</p>
+<p>Manages tracking and advancing global turns as well as initiating end-of-game scoring calculations.
+Creating a game will create instances of the Player object according to the specified number of players passed to the constructor.</p>
+<dl class="attribute">
+<dt id="yahtzee_api.game.Game.players">
+<code class="sig-name descname">players</code><a class="headerlink" href="#yahtzee_api.game.Game.players" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of Player object instances, one for each participant. The player_name attribute is set to “P{index_in_players_list}” which can be used to distinguish players.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.game.Game.remaining_turns">
+<code class="sig-name descname">remaining_turns</code><a class="headerlink" href="#yahtzee_api.game.Game.remaining_turns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Global turn tracker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.game.Game.current_player">
+<code class="sig-name descname">current_player</code><a class="headerlink" href="#yahtzee_api.game.Game.current_player" title="Permalink to this definition">¶</a></dt>
+<dd><p>The player who is currently rolling dice/scoring.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#yahtzee_api.player.Player" title="yahtzee_api.player.Player">Player</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.game.Game.num_players">
+<code class="sig-name descname">num_players</code><a class="headerlink" href="#yahtzee_api.game.Game.num_players" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of players in the game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.game.Game.winner">
+<code class="sig-name descname">winner</code><a class="headerlink" href="#yahtzee_api.game.Game.winner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Player who wins the game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#yahtzee_api.player.Player" title="yahtzee_api.player.Player">Player</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.game.Game.tie">
+<code class="sig-name descname">tie</code><a class="headerlink" href="#yahtzee_api.game.Game.tie" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if game ends in a tie - in this case, winner attribute will remain none.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.game.Game.next_player">
+<code class="sig-name descname">next_player</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game.next_player" title="Permalink to this definition">¶</a></dt>
+<dd><p>Advances to the next player and moves to the next global turn when the last player is detected.</p>
+<p>Once the 13th turn is completed, this method will automatically calculate the final scores and set the value of the winner attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.game.Game.print_status">
+<code class="sig-name descname">print_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game.print_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints out the current moment-in-time status of the game.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-yahtzee_api.player">
+<span id="yahtzee-api-class-player"></span><h2>Yahtzee API Class: Player<a class="headerlink" href="#module-yahtzee_api.player" title="Permalink to this headline">¶</a></h2>
+<p>Module containing the Player class.</p>
+<dl class="class">
+<dt id="yahtzee_api.player.Player">
+<em class="property">class </em><code class="sig-prename descclassname">yahtzee_api.player.</code><code class="sig-name descname">Player</code><span class="sig-paren">(</span><em class="sig-param">player_name</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores information about each player’s current status including score, theoretical score, rolls remaining in their turn, and the status of their last roll.</p>
+<p>This class tracks the data associated with each player, and additionally performs all scoring calculations including all possible scores based on the current
+configuration of the dice and their scorecard.</p>
+<dl class="attribute">
+<dt id="yahtzee_api.player.Player.player_name">
+<code class="sig-name descname">player_name</code><a class="headerlink" href="#yahtzee_api.player.Player.player_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string containing the name of the player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.player.Player.score">
+<code class="sig-name descname">score</code><a class="headerlink" href="#yahtzee_api.player.Player.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value indicating the point total for the player (calculated at the end of the game).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.player.Player.scorecard">
+<code class="sig-name descname">scorecard</code><a class="headerlink" href="#yahtzee_api.player.Player.scorecard" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of lists tracking each row of a Yahtzee scorecard with each row of the card following this structure: [score, [dice used to get score], number of rolls].</p>
+<p>Scorecard indices are as follows:</p>
+<p>[0]: 1’s</p>
+<p>[1]: 2’s</p>
+<p>[2]: 3’s</p>
+<p>[3]: 4’s</p>
+<p>[4]: 5’s</p>
+<p>[5]: 6’s</p>
+<p>[6]: Three of a Kind</p>
+<p>[7]: Four of a Kind</p>
+<p>[8]: Full House</p>
+<p>[9]: Small Straight</p>
+<p>[10]: Large Straight</p>
+<p>[11]: Yahtzee</p>
+<p>[12]: Chance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.player.Player.theoretical_scorecard">
+<code class="sig-name descname">theoretical_scorecard</code><a class="headerlink" href="#yahtzee_api.player.Player.theoretical_scorecard" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure: [score, [indices in self.dice of dice used to get score], number of rolls].
+Theoretical Scorecard indices are as follows:</p>
+<p>[0]: 1’s</p>
+<p>[1]: 2’s</p>
+<p>[2]: 3’s</p>
+<p>[3]: 4’s</p>
+<p>[4]: 5’s</p>
+<p>[5]: 6’s</p>
+<p>[6]: Three of a Kind</p>
+<p>[7]: Four of a Kind</p>
+<p>[8]: Full House</p>
+<p>[9]: Small Straight</p>
+<p>[10]: Large Straight</p>
+<p>[11]: Yahtzee</p>
+<p>[12]: Chance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.player.Player.dice">
+<code class="sig-name descname">dice</code><a class="headerlink" href="#yahtzee_api.player.Player.dice" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the 5 dice in play - index is preserved throughout calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.calculate_final_score">
+<code class="sig-name descname">calculate_final_score</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.calculate_final_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sums the total points a player has scored and stores it in the Player.score attribute.</p>
+<p>This function can only be called at the end of the game when all 13 scorecard values have been scored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If scorecard is not complete (implying the game is not over).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.end_turn">
+<code class="sig-name descname">end_turn</code><span class="sig-paren">(</span><em class="sig-param">score_type</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.end_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets turn-based parameters and fills in scorecard based on player choice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>score_type</strong> (<em>int</em>) – Index of the scorecard entry that the player has chosen to score for this round.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.print_player_info">
+<code class="sig-name descname">print_player_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_player_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints player’s entire information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.print_scorecard">
+<code class="sig-name descname">print_scorecard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_scorecard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints out the player’s scorecard line by line.</p>
+<p>Scorecard indices are as follows:</p>
+<blockquote>
+<div><p>[0]: 1’s</p>
+<p>[1]: 2’s</p>
+<p>[2]: 3’s</p>
+<p>[3]: 4’s</p>
+<p>[4]: 5’s</p>
+<p>[5]: 6’s</p>
+<p>[6]: Three of a Kind</p>
+<p>[7]: Four of a Kind</p>
+<p>[8]: Full House</p>
+<p>[9]: Small Straight</p>
+<p>[10]: Large Straight</p>
+<p>[11]: Yahtzee</p>
+<p>[12]: Chance</p>
+</div></blockquote>
+<p>The list in position [1] of each sublist contains the values of the 5 dice rolled to achieve the associated score.</p>
+<p>The integer in position [2] of each sublist represents the number of rolls used to obtain that score.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.print_theoretical_scorecard">
+<code class="sig-name descname">print_theoretical_scorecard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_theoretical_scorecard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints out the player’s theoretical scorecard line by line baesd on their last roll.</p>
+<p>Theoretical Scorecard indices are as follows:</p>
+<blockquote>
+<div><p>[0]: 1’s</p>
+<p>[1]: 2’s</p>
+<p>[2]: 3’s</p>
+<p>[3]: 4’s</p>
+<p>[4]: 5’s</p>
+<p>[5]: 6’s</p>
+<p>[6]: Three of a Kind</p>
+<p>[7]: Four of a Kind</p>
+<p>[8]: Full House</p>
+<p>[9]: Small Straight</p>
+<p>[10]: Large Straight</p>
+<p>[11]: Yahtzee</p>
+<p>[12]: Chance</p>
+</div></blockquote>
+<p>The list in position [1] of each sublist contains the values of the indices of the dice used to calculate the associated score.</p>
+<p>The integer in position [2] of each sublist represents the number of rolls used to obtain that score.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.roll_dice">
+<code class="sig-name descname">roll_dice</code><span class="sig-paren">(</span><em class="sig-param">dice_to_roll</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.roll_dice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rolls dice specified by the dice_to_roll list, updates related class attributes, and calculates the theoretical scorecard values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dice_to_roll</strong> (<em>list</em>) – A list of length 5 containing boolean values where “True” indicates the die in that position should be rolled.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the number of rolls remaining is less than or equal to 0.</p></li>
+<li><p><strong>ValueError</strong> – If the length of dice_to_roll is not 5.</p></li>
+<li><p><strong>TypeError</strong> – If dice_to_roll is not a list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Tom Arbeiter
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
