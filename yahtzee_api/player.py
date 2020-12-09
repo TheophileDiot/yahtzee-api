@@ -4,7 +4,7 @@ import random
 import copy
 
 class Player:
-    """Stores information about each player's current status including score, theoretical score, rolls remaining in their turn, and the status of their last roll.
+    """Stores  information about each player's current status including score, theoretical score, rolls remaining in their turn, and the status of their last roll.
     
     This class tracks the data associated with each player, and additionally performs all scoring calculations including all possible scores based on the current 
     configuration of the dice and their scorecard. 

@@ -30,7 +30,6 @@ jobs:
 
       - name: Build
         run: |
-          pipenv run make clean
           pipenv run make html
         working-directory: docs
       
