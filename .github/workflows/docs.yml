@@ -1,4 +1,4 @@
-name: Build, Test, Deploy Docs
+name: Build, Test, Deploy 
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pipenv
-          pipenv install -U sphinx
+          pipenv install sphinx
           pipenv install sphinx-rtd-theme
 
       - name: Build
