@@ -37,7 +37,6 @@ jobs:
       - name: Vale Tests
         uses: errata-ai/vale-action@v1.3.0
         with:
-          config: https://raw.githubusercontent.com/errata-ai/vale/master/.vale.ini
           files: docs/build
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -47,7 +46,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: docs
+          FOLDER: .
           CLEAN: true 
           
           
