@@ -5,7 +5,7 @@ Welcome to the Yahtzee API! This package provides the core functionalities to pr
 This package is not yet deployed on PyPI. Targeting Dec. 10th, 2020 for deployment of version 0.1.0.
 
 #### Documentation
-For complete documentation on the available API methods, please visit (https:/yahtzee-api.tomarbeiter.com).
+For complete documentation on the available API methods, please visit (https://yahtzee-api.tomarbeiter.com).
 
 #### Contributing
 Questions? Comments? Want to contribute? Reach out to me via email: (arbeitertom@gmail.com).
