@@ -34,6 +34,7 @@ jobs:
           vale --minAlertLevel error source
           
       - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           BRANCH: master # The branch the action should deploy to.
