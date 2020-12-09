@@ -1,4 +1,4 @@
-name: Build, Test, Deploy 
+name: Build and Deploy Documentation
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
 
 jobs:
   Documentation:
@@ -32,13 +31,6 @@ jobs:
         run: |
           pipenv run make html
         working-directory: docs
-      
-      - name: Vale Tests
-        uses: errata-ai/vale-action@v1.3.0
-        with:
-          files: docs/build
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.7.1
