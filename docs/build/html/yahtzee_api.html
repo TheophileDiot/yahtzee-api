@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yahtzee API &mdash; Yahtzee API 0.1.0 documentation</title>
+  <title>Yahtzee API &mdash; Yahtzee API 0.1.1 documentation</title>
   
 
   
@@ -361,6 +361,9 @@ Theoretical Scorecard indices are as follows:</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>score_type</strong> (<em>int</em>) – Index of the scorecard entry that the player has chosen to score for this round.</p>
 </dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If score_type is not between 0 and 12.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -374,48 +377,12 @@ Theoretical Scorecard indices are as follows:</p>
 <dt id="yahtzee_api.player.Player.print_scorecard">
 <code class="sig-name descname">print_scorecard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_scorecard" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints out the player’s scorecard line by line.</p>
-<p>Scorecard indices are as follows:</p>
-<blockquote>
-<div><p>[0]: 1’s</p>
-<p>[1]: 2’s</p>
-<p>[2]: 3’s</p>
-<p>[3]: 4’s</p>
-<p>[4]: 5’s</p>
-<p>[5]: 6’s</p>
-<p>[6]: Three of a Kind</p>
-<p>[7]: Four of a Kind</p>
-<p>[8]: Full House</p>
-<p>[9]: Small Straight</p>
-<p>[10]: Large Straight</p>
-<p>[11]: Yahtzee</p>
-<p>[12]: Chance</p>
-</div></blockquote>
-<p>The list in position [1] of each sublist contains the values of the 5 dice rolled to achieve the associated score.</p>
-<p>The integer in position [2] of each sublist represents the number of rolls used to obtain that score.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yahtzee_api.player.Player.print_theoretical_scorecard">
 <code class="sig-name descname">print_theoretical_scorecard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_theoretical_scorecard" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints out the player’s theoretical scorecard line by line baesd on their last roll.</p>
-<p>Theoretical Scorecard indices are as follows:</p>
-<blockquote>
-<div><p>[0]: 1’s</p>
-<p>[1]: 2’s</p>
-<p>[2]: 3’s</p>
-<p>[3]: 4’s</p>
-<p>[4]: 5’s</p>
-<p>[5]: 6’s</p>
-<p>[6]: Three of a Kind</p>
-<p>[7]: Four of a Kind</p>
-<p>[8]: Full House</p>
-<p>[9]: Small Straight</p>
-<p>[10]: Large Straight</p>
-<p>[11]: Yahtzee</p>
-<p>[12]: Chance</p>
-</div></blockquote>
-<p>The list in position [1] of each sublist contains the values of the indices of the dice used to calculate the associated score.</p>
-<p>The integer in position [2] of each sublist represents the number of rolls used to obtain that score.</p>
 </dd></dl>
 
 <dl class="method">
@@ -430,6 +397,7 @@ Theoretical Scorecard indices are as follows:</p>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> – If the number of rolls remaining is less than or equal to 0.</p></li>
 <li><p><strong>ValueError</strong> – If the length of dice_to_roll is not 5.</p></li>
+<li><p><strong>TypeError</strong> – If the dice_to_roll list does not contain only bool values.</p></li>
 <li><p><strong>TypeError</strong> – If dice_to_roll is not a list.</p></li>
 </ul>
 </dd>

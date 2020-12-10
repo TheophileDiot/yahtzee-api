@@ -3,10 +3,6 @@ Introduction
 Welcome to the Yahtzee API! This package provides the core functionalities to programmatically play a game of Yahtzee. 
 The stated purpose of this package is for use with custom OpenAI Gym reinforcement learning environments (in development), however it is generalized for many different use cases, including simple algorithm development.
 
-Current Version: 0.1.0
-**********************
-This is the first full iteration of this API. As I do more work on the OpenAI Gym environments that will be using this package, I will likely be reworking/adding to some of the core functionalities to suit my needs.
-
 GitHub Repo
 ***********
 To view the source code for the Yahtzee API, visit the GitHub repo here `here <https://github.com/tomarbeiter/yahtzee_api>`__.
