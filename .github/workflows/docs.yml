@@ -37,8 +37,8 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: docs
-          TARGET_FOLDER: docs
+          FOLDER: docs/
+          TARGET_FOLDER: docs/build/
           CLEAN: true 
           
           
