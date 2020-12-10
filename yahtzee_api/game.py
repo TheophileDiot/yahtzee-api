@@ -27,21 +27,21 @@ class Game:
         self.remaining_turns = 13
         self.current_player = self.players[0]
         self.num_players = num_players
-        self.winner = None
-        self.tie = False
 
     def next_player(self):
         """Advances to the next player and moves to the next global turn when the last player is detected.
         
-        Once the 13th turn is completed, this method will automatically calculate the final scores and set the value of the winner attribute.
+        Once the 13th turn is completed, this method will automatically calculate the final scores and
+        return a list containing the winner(s) Player object(s).
         """
         if self.players.index(self.current_player) == self.num_players - 1:
             self.remaining_turns -= 1
             self.current_player = self.players[0]
             if self.remaining_turns == 0:
-                self._end_game()
+                return self._end_game()
         else:
             self.current_player = self.players[self.players.index(self.current_player) + 1]
+            return []
 
     def print_status(self):
         """Prints out the current moment-in-time status of the game."""
@@ -53,25 +53,14 @@ class Game:
             player.print_scorecard()
 
     def _end_game(self):
-        """Computes final scores for each player and prints the results."""
+        """Computes final scores for each player and prints the results.
+        
+        Returns a list with the winner(s). If there is a tie, the list will contain all players who had the highest score.
+        Otherwise the list will contain only the winner, in position 0.
+        """
         final_scores = []
         for player in self.players:
             player.calculate_final_score()
-            player.print_scorecard()
             final_scores.append(player.score)
-        self._make_winner(final_scores)
+        return [player for player in self.players if player.score == max(final_scores)]
 
-    def _make_winner(self, final_scores):
-        """Determines the winner (or tie) of the game."""
-        winner = [player for player in self.players if player.score == max(final_scores)]
-        if len(winner) == 1: 
-            self.winner = winner[0]
-            print("Winner:", self.winner.player_name)
-        elif len(winner) > 1:
-            self.winner = None
-            self.tie = True
-            print("The game ended in a tie.")
-        else:
-            raise ValueError("Error in Game._end_game(): No winner determined.")
-
-        print("----- End of Game -----")

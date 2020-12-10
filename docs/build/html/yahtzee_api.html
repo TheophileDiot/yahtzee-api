@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yahtzee API &mdash; Yahtzee API 0.1.1 documentation</title>
+  <title>Yahtzee API &mdash; Yahtzee API 0.1.2 documentation</title>
   
 
   
@@ -236,7 +236,8 @@ Creating a game will create instances of the Player object according to the spec
 <dt id="yahtzee_api.game.Game.next_player">
 <code class="sig-name descname">next_player</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game.next_player" title="Permalink to this definition">¶</a></dt>
 <dd><p>Advances to the next player and moves to the next global turn when the last player is detected.</p>
-<p>Once the 13th turn is completed, this method will automatically calculate the final scores and set the value of the winner attribute.</p>
+<p>Once the 13th turn is completed, this method will automatically calculate the final scores and
+return a list containing the winner(s) Player object(s).</p>
 </dd></dl>
 
 <dl class="method">
@@ -341,6 +342,17 @@ Theoretical Scorecard indices are as follows:</p>
 </dl>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="yahtzee_api.player.Player.rolls_left">
+<code class="sig-name descname">rolls_left</code><a class="headerlink" href="#yahtzee_api.player.Player.rolls_left" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integer tracking how many rolls the player has left on the current turn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="yahtzee_api.player.Player.calculate_final_score">
 <code class="sig-name descname">calculate_final_score</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.calculate_final_score" title="Permalink to this definition">¶</a></dt>
@@ -398,6 +410,7 @@ Theoretical Scorecard indices are as follows:</p>
 <li><p><strong>ValueError</strong> – If the number of rolls remaining is less than or equal to 0.</p></li>
 <li><p><strong>ValueError</strong> – If the length of dice_to_roll is not 5.</p></li>
 <li><p><strong>TypeError</strong> – If the dice_to_roll list does not contain only bool values.</p></li>
+<li><p><strong>ValueError</strong> – If the player attempts to roll fewer than 5 dice on the first roll of their turn.</p></li>
 <li><p><strong>TypeError</strong> – If dice_to_roll is not a list.</p></li>
 </ul>
 </dd>

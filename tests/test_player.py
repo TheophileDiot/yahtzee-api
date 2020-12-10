@@ -32,6 +32,12 @@ class TestPlayer:
         with pytest.raises(TypeError):
             p.roll_dice([3, True, True, False, True])
 
+    def test_roll_dice_first_roll_has_five(self):
+        """Tests VaueError when roll_dice(dice_to_roll) method tries to roll fewer than 5 dice on the first roll of the turn."""
+        p = Player("Tom")
+        with pytest.raises(ValueError):
+            p.roll_dice([False, True, True, True, True])
+
     def test_roll_dice_dice_to_roll_type(self):
         """Tests TypeError when roll_dice(dice_to_roll) method is called with a dice_to_roll not of type list."""
         p = Player("Tom")
