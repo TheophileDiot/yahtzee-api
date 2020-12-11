@@ -156,6 +156,31 @@ class Player:
         self._reset_theoretical_scorecard()                  
         self._calculate_theoretical_scorecard()
 
+    def set_dice_to_reroll(self, index):
+        """Returns a list to be passed into roll_dice() created based on the selection of an entry in the theoretical scorecard.
+        
+        This method can only be called after the dice have been rolled for the first time. It takes an index of the theoretical scorecard
+        as a parameter, translates the indices of the dice stored on the theoretical scorecard at that index, and returns a list of dice 
+        to be rerolled, where the indices on the chosen entry of the theoretical scroecard are marked "False" so as to not be rerolled. 
+        This method does not have to be used - an algorithm could vary in how it chooses which dice to reroll - this simply provides an
+        easier way to choose based on the theoretical scorecard state after each roll. Keep in mind, you can reroll any dice at any point -
+        just because you don't reroll one the first time doesn't mean you can't pick a different index the second time and reroll that one.
+
+        Args:
+            index (int): Index of the theoretical scorecard corresponding to the dice not to be rerolled.
+        Returns:
+            A list of boolean values formatted properly for the roll_dice() method. 
+        Raises:
+            ValueError: If the index is not between 0 and 12 inclusive.
+            ValueError: If the method is called before the first roll of the turn.
+        """
+        if index < 0 or index > 12:
+            raise ValueError("ValueError in Player.set_dice_to_reroll(): index is out of range.")
+        if self.rolls_left == 3:
+            raise ValueError("ValueError in Player.set_dice_to_reroll(): This method can only be called after the first roll of the turn.")
+
+        return [i not in self.theoretical_scorecard[index][1] for i in range(5)]
+
     def end_turn(self, score_type):
         """Resets turn-based parameters and fills in scorecard based on player choice.
         
@@ -187,28 +212,6 @@ class Player:
                 raise ValueError("Error in Player.calculate_final_score(): Player has unscored entries on scorecard.")
             self.score += entry[0]
         self._calculate_bonus()
-
-    def print_player_info(self):
-        """Prints player's entire information."""
-        print(self.player_name)
-        print(self.dice)
-        print(self.rolls_left)
-        self.print_scorecard()
-        self.print_theoretical_scorecard()
-    
-    def print_scorecard(self):
-        """Prints out the player's scorecard line by line."""
-        print("Scorecard:")
-        for i in range(13):
-            print(self.scorecard[i])
-        print("\n")
-
-    def print_theoretical_scorecard(self):
-        """Prints out the player's theoretical scorecard line by line baesd on their last roll."""
-        print("Theoretical Scorecard:")
-        for i in range(13):
-            print(self.theoretical_scorecard[i])
-        print("\n")
 
     def _reset_theoretical_scorecard(self):
         """Resets the theoretical scorecard. Called after each roll of the dice."""

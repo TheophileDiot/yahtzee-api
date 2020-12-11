@@ -1,7 +1,6 @@
 Introduction
 ============
 Welcome to the Yahtzee API! This package provides the core functionalities to programmatically play a game of Yahtzee. The purpose of this package is for use with custom OpenAI Gym reinforcement learning environments (in development), however it is generalized for many different use cases including simple algorithm development. Currently the API is still pre version 1.0.0 and is being iterated rapidly so stability should not be taken for granted until 1.0.0 is released. See below for a further note on versioning.
-This package is composed of two class: the Game class and the Player class. The Game class provides the general structure and manages advancing turns and determining the winner. 
 Instantiating a Game object will create a list of Player objects that can be interacted with using the methods outlined in these docs. Click into the links on the left panel for a detailed description of the public methods and attributes for each class.
 
 GitHub Repo

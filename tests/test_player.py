@@ -58,6 +58,28 @@ class TestPlayer:
         p.roll_dice([False, True, True, True, True])
         assert temp == p.dice[0]
 
+    def test_set_dice_to_reroll_index(self):
+        """Tests that input index to set_dice_to_reroll is in range."""
+        p = Player("Tom")
+        p.rolls_left = 2
+        with pytest.raises(ValueError):
+            p.set_dice_to_reroll(-1)
+
+        with pytest.raises(ValueError):
+            p.set_dice_to_reroll(13)
+
+    def test_set_dice_to_reroll_second_roll(self):
+        """Tests that the method will only run on the 2nd and 3rd roll of a player's turn."""
+        p = Player("Tom")
+        with pytest.raises(ValueError):
+            p.set_dice_to_reroll(3)
+    
+    def test_set_dice_to_reroll_return_length(self):
+        """Tests that set_dice_to_reroll returns a list of length 5."""
+        p = Player("Tom")
+        p.roll_dice([True, True, True, True, True])
+        assert len(p.set_dice_to_reroll(2)) == 5
+
     def test_end_turn_score_type_value(self):
         """Tests ValueError when end_turn(score_type) method is called with score_type not between 0 and 12, inclusive."""
         p = Player("Tom")

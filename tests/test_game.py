@@ -41,5 +41,6 @@ class TestGame:
             [0, [], 1],
             [0, [], 1],
         ]
-        assert len(g.next_player()) >= 0
+        g.next_player()
+        assert len(g.winner) > 0
         

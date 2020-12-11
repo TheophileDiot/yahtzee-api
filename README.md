@@ -19,8 +19,7 @@ from yahtzee_api.game import Game
 game = Game(1)  # Specify number of players
 
 for i in range(13):     # Iterate for each turn
-    game.current_player.roll_dice([True, True, True, True, True])   # Roll all 5 dice
-    game.current_player.print_theoretical_scorecard()               # Print out all possible scores based on roll
+    game.current_player.roll_dice([True, True, True, True, True])   # Roll all 5 dice               # Print out all possible scores based on roll
     index = 0
     max_score = 0
     for entry in game.current_player.theoretical_scorecard:     # Choose the highest possible score from that roll
@@ -28,14 +27,11 @@ for i in range(13):     # Iterate for each turn
             max_score = entry[0]
             index = game.current_player.theoretical_scorecard.index(entry)
     game.current_player.end_turn(index)         # End turn by scoring the max value
-    game.players[0].print_scorecard()
-    result = game.next_player()                 # Advances global turn because there is only 1 player
+    game.next_player()                 # Advances global turn because there is only 1 player
 
-print("Winner: ", result[0].player_name)        # Print out post-game results
-print("Score: ", result[0].score)
-result[0].print_scorecard()
+game.print_final("test.txt", True)
 ```
-This algorithm is obviously not going to win you any Yahtzee games (it never even rerolls the dice!), but demonstrates some of the core functionalities of the API. I recommend viewing the documentation in tandem with this example to fully understand what each method does/returns. 
+This algorithm is obviously not going to win you any Yahtzee games (it never even rerolls the dice!), but demonstrates some of the core functionalities of the API. I recommend viewing the documentation in tandem with this example to fully understand what each method does/returns. This example will be expanded and imporved as the API approaches its first stable release. 
 
 ### A Note on Versioning
 This project is my first headfirst dive into the world of publishing Python packages, using Sphinx for documentation, GitHub Actions, etc. As such, there are plenty of junk commits and mistakes in the repo. I've done my best to clean it up and make sure that what is presented is accurate, up-to-date, and at least somewhat helpful. 
