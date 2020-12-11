@@ -7,16 +7,18 @@ class Player:
     """Stores information about each player's current status including score, theoretical score, rolls remaining in their turn, and the status of their last roll.
     
     This class tracks the data associated with each player, and additionally performs all scoring calculations including all possible scores based on the current 
-    configuration of the dice and their scorecard. 
+    configuration of the dice and their scorecard. The Player object will expose all of the relevant information needed for algorithmic decision making,
+    including a theoretical scorecard that gives all the possible scores based on what the player has already scored and the current configuration of the dice. 
     
     Attributes:
         player_name (str): A string containing the name of the player.
         score (int): An integer value indicating the point total for the player (calculated at the end of the game).
-        scorecard (list): A list of lists tracking each row of a Yahtzee scorecard with each row of the card following this structure: [score, [dice used to get score], number of rolls].
+        scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, with each row (inner list) of the card following this structure: 
+        [score, [dice used to get score], number of rolls]. This is updated when a player ends their turn with the end_turn() method.
             
-            Scorecard indices are as follows:
+        Scorecard indices are as follows:
 
-            [0]: 1's
+            [0]: 1's 
 
             [1]: 2's
 
@@ -42,8 +44,11 @@ class Player:
 
             [12]: Chance
 
-        theoretical_scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure: [score, [indices in self.dice of dice used to get score], number of rolls].
-            Theoretical Scorecard indices are as follows:
+        theoretical_scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure: 
+        [score, [indices in self.dice of dice used to get score], number of rolls]. This is calculated after every roll and can be used to make decisions about which dice to roll again,
+        which score to take, and more. This scorecard stores the indices of the dice, rather than the dice values themselves, to make it more useful for choosing which dice to reroll based 
+        on what score entry the player wants to pursue.
+        Theoretical Scorecard indices are as follows:
             
             [0]: 1's
 
@@ -72,7 +77,7 @@ class Player:
             [12]: Chance
 
         dice (list): A list of the 5 dice in play - index is preserved throughout calculations.
-        rolls_left (int): Integer tracking how many rolls the player has left on the current turn.
+        rolls_left (int): Integer tracking how many rolls the player has left on the current turn (there are 3 rolls per turn).
     """
     def __init__(self, player_name):
         """Constructor method for Player class.
@@ -125,22 +130,22 @@ class Player:
         
         Raises:
             ValueError: If the number of rolls remaining is less than or equal to 0.
+            TypeError: If dice_to_roll is not a list.
             ValueError: If the length of dice_to_roll is not 5.
             TypeError: If the dice_to_roll list does not contain only bool values.
             ValueError: If the player attempts to roll fewer than 5 dice on the first roll of their turn.
-            TypeError: If dice_to_roll is not a list.
         """
         if self.rolls_left <= 0:
             raise ValueError("ValueError in Player.roll_dice(): No rolls remaining.")
+        if not isinstance(dice_to_roll, list):
+            raise TypeError("TypeError in Player.roll_dice(): dice_to_roll must be of type list.")
         if len(dice_to_roll) != 5:
             raise ValueError("ValueError in Player.roll_dice(): dice_to_roll argument must be a list of length 5.")
         if len([x for x in dice_to_roll if not isinstance(x, bool)]) != 0:
             raise TypeError("TypeError in Player.roll_dice(): dice_to_roll argument must contain only boolean values.")
         if self.rolls_left == 3 and len([x for x in dice_to_roll if x != True]) > 0:
             raise ValueError("ValueError in Player.roll_dice(): All 5 dice must be rolled on the first roll of the turn.")
-        if not isinstance(dice_to_roll, list):
-            raise TypeError("TypeError in Player.roll_dice(): dice_to_roll must be of type list.")
-
+    
         for i in range(5):
             if dice_to_roll[i] == True:
                 self.dice[i] = random.randint(1, 6)

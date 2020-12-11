@@ -6,22 +6,21 @@ class Game:
     """Represents the larger game structure for Yahtzee.
 
     Manages tracking and advancing global turns as well as initiating end-of-game scoring calculations. 
-    Creating a game will create instances of the Player object according to the specified number of players passed to the constructor.
+    Creating a game will create a list of instances of the Player object according to the specified number of players passed to the constructor.
+    All algorithm development should happen through an instance of this class as it provides a rule-adhering structure and allows access to the Player object and its methods.
     
     Attributes:
         players (list): A list of Player object instances, one for each participant. The player_name attribute is set to "P{index_in_players_list}" which can be used to distinguish players.
         remaining_turns (int): Global turn tracker.
         current_player (Player): The player who is currently rolling dice/scoring.
         num_players (int): Number of players in the game. 
-        winner (Player): Player who wins the game.
-        tie (boolean): True if game ends in a tie - in this case, winner attribute will remain none.
     """
 
     def __init__(self, num_players):
         """Class constructor.
         
         Args:
-            num_players (int): Number of palyers in the game.
+            num_players (int): Number of players in the game.
         """
         self.players = [Player("P" + str(i)) for i in range(num_players)]
         self.remaining_turns = 13
@@ -33,6 +32,11 @@ class Game:
         
         Once the 13th turn is completed, this method will automatically calculate the final scores and
         return a list containing the winner(s) Player object(s).
+
+        Returns:
+            Either an empty list if the game is still in progress,
+            or a list of the Player objects of the winner(s) 
+            (multiple winners in the case of a tie).
         """
         if self.players.index(self.current_player) == self.num_players - 1:
             self.remaining_turns -= 1
@@ -55,7 +59,7 @@ class Game:
     def _end_game(self):
         """Computes final scores for each player and prints the results.
         
-        Returns a list with the winner(s). If there is a tie, the list will contain all players who had the highest score.
+        Returns a list with the Player objects of the winner(s). If there is a tie, the list will contain all players who had the highest score.
         Otherwise the list will contain only the winner, in position 0.
         """
         final_scores = []
