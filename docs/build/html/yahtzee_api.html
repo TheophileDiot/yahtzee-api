@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yahtzee API &mdash; Yahtzee API 0.1.2 documentation</title>
+  <title>Yahtzee API &mdash; Yahtzee API 0.2.0 documentation</title>
   
 
   
@@ -165,7 +165,8 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents the larger game structure for Yahtzee.</p>
 <p>Manages tracking and advancing global turns as well as initiating end-of-game scoring calculations.
-Creating a game will create instances of the Player object according to the specified number of players passed to the constructor.</p>
+Creating a game will create a list of instances of the Player object according to the specified number of players passed to the constructor.
+All algorithm development should happen through an instance of this class as it provides a rule-adhering structure and allows access to the Player object and its methods.</p>
 <dl class="attribute">
 <dt id="yahtzee_api.game.Game.players">
 <code class="sig-name descname">players</code><a class="headerlink" href="#yahtzee_api.game.Game.players" title="Permalink to this definition">¶</a></dt>
@@ -213,21 +214,10 @@ Creating a game will create instances of the Player object according to the spec
 <dl class="attribute">
 <dt id="yahtzee_api.game.Game.winner">
 <code class="sig-name descname">winner</code><a class="headerlink" href="#yahtzee_api.game.Game.winner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Player who wins the game.</p>
+<dd><p>list populated at the end of the game with Player object(s) to store winner(s) (in case of a tie)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#yahtzee_api.player.Player" title="yahtzee_api.player.Player">Player</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="yahtzee_api.game.Game.tie">
-<code class="sig-name descname">tie</code><a class="headerlink" href="#yahtzee_api.game.Game.tie" title="Permalink to this definition">¶</a></dt>
-<dd><p>True if game ends in a tie - in this case, winner attribute will remain none.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>boolean</p>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -237,13 +227,35 @@ Creating a game will create instances of the Player object according to the spec
 <code class="sig-name descname">next_player</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game.next_player" title="Permalink to this definition">¶</a></dt>
 <dd><p>Advances to the next player and moves to the next global turn when the last player is detected.</p>
 <p>Once the 13th turn is completed, this method will automatically calculate the final scores and
-return a list containing the winner(s) Player object(s).</p>
+set the value of self.winner to the winner(s) Player object(s).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.game.Game.print_final">
+<code class="sig-name descname">print_final</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">overwrite=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game.print_final" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints out the final results of the game to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – Filename to write to.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to overwrite existing file data. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="yahtzee_api.game.Game.print_status">
-<code class="sig-name descname">print_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game.print_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints out the current moment-in-time status of the game.</p>
+<code class="sig-name descname">print_status</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">overwrite=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.game.Game.print_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints out the current moment-in-time status of the game to a specified file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – Filename to write to.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to overwrite existing file data. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -258,7 +270,8 @@ return a list containing the winner(s) Player object(s).</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stores information about each player’s current status including score, theoretical score, rolls remaining in their turn, and the status of their last roll.</p>
 <p>This class tracks the data associated with each player, and additionally performs all scoring calculations including all possible scores based on the current
-configuration of the dice and their scorecard.</p>
+configuration of the dice and their scorecard. The Player object will expose all of the relevant information needed for algorithmic decision making,
+including a theoretical scorecard that gives all the possible scores based on what the player has already scored and the current configuration of the dice.</p>
 <dl class="attribute">
 <dt id="yahtzee_api.player.Player.player_name">
 <code class="sig-name descname">player_name</code><a class="headerlink" href="#yahtzee_api.player.Player.player_name" title="Permalink to this definition">¶</a></dt>
@@ -284,21 +297,7 @@ configuration of the dice and their scorecard.</p>
 <dl class="attribute">
 <dt id="yahtzee_api.player.Player.scorecard">
 <code class="sig-name descname">scorecard</code><a class="headerlink" href="#yahtzee_api.player.Player.scorecard" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of lists tracking each row of a Yahtzee scorecard with each row of the card following this structure: [score, [dice used to get score], number of rolls].</p>
-<p>Scorecard indices are as follows:</p>
-<p>[0]: 1’s</p>
-<p>[1]: 2’s</p>
-<p>[2]: 3’s</p>
-<p>[3]: 4’s</p>
-<p>[4]: 5’s</p>
-<p>[5]: 6’s</p>
-<p>[6]: Three of a Kind</p>
-<p>[7]: Four of a Kind</p>
-<p>[8]: Full House</p>
-<p>[9]: Small Straight</p>
-<p>[10]: Large Straight</p>
-<p>[11]: Yahtzee</p>
-<p>[12]: Chance</p>
+<dd><p>A list of lists tracking each row of a Yahtzee scorecard, with each row (inner list) of the card following this structure:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>list</p>
@@ -307,11 +306,14 @@ configuration of the dice and their scorecard.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="yahtzee_api.player.Player.theoretical_scorecard">
-<code class="sig-name descname">theoretical_scorecard</code><a class="headerlink" href="#yahtzee_api.player.Player.theoretical_scorecard" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure: [score, [indices in self.dice of dice used to get score], number of rolls].
-Theoretical Scorecard indices are as follows:</p>
-<p>[0]: 1’s</p>
+<dt>
+<code class="sig-name descname">[score, [dice used to get score], number of rolls]. This is updated when a player ends their turn with the end_turn() method.</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">Scorecard indices are as follows</code></dt>
+<dd><p>[0]: 1’s</p>
 <p>[1]: 2’s</p>
 <p>[2]: 3’s</p>
 <p>[3]: 4’s</p>
@@ -324,11 +326,50 @@ Theoretical Scorecard indices are as follows:</p>
 <p>[10]: Large Straight</p>
 <p>[11]: Yahtzee</p>
 <p>[12]: Chance</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="yahtzee_api.player.Player.theoretical_scorecard">
+<code class="sig-name descname">theoretical_scorecard</code><a class="headerlink" href="#yahtzee_api.player.Player.theoretical_scorecard" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">[score, [indices in self.dice of dice used to get score], number of rolls]. This is calculated after every roll and can be used to make decisions about which dice to roll again,</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">which score to take, and more. This scorecard stores the indices of the dice, rather than the dice values themselves, to make it more useful for choosing which dice to reroll based</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">on what score entry the player wants to pursue.</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">Theoretical Scorecard indices are as follows</code></dt>
+<dd><p>[0]: 1’s</p>
+<p>[1]: 2’s</p>
+<p>[2]: 3’s</p>
+<p>[3]: 4’s</p>
+<p>[4]: 5’s</p>
+<p>[5]: 6’s</p>
+<p>[6]: Three of a Kind</p>
+<p>[7]: Four of a Kind</p>
+<p>[8]: Full House</p>
+<p>[9]: Small Straight</p>
+<p>[10]: Large Straight</p>
+<p>[11]: Yahtzee</p>
+<p>[12]: Chance</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -345,7 +386,7 @@ Theoretical Scorecard indices are as follows:</p>
 <dl class="attribute">
 <dt id="yahtzee_api.player.Player.rolls_left">
 <code class="sig-name descname">rolls_left</code><a class="headerlink" href="#yahtzee_api.player.Player.rolls_left" title="Permalink to this definition">¶</a></dt>
-<dd><p>Integer tracking how many rolls the player has left on the current turn.</p>
+<dd><p>Integer tracking how many rolls the player has left on the current turn (there are 3 rolls per turn).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>int</p>
@@ -380,24 +421,6 @@ Theoretical Scorecard indices are as follows:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="yahtzee_api.player.Player.print_player_info">
-<code class="sig-name descname">print_player_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_player_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints player’s entire information.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="yahtzee_api.player.Player.print_scorecard">
-<code class="sig-name descname">print_scorecard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_scorecard" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints out the player’s scorecard line by line.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="yahtzee_api.player.Player.print_theoretical_scorecard">
-<code class="sig-name descname">print_theoretical_scorecard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.print_theoretical_scorecard" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints out the player’s theoretical scorecard line by line baesd on their last roll.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="yahtzee_api.player.Player.roll_dice">
 <code class="sig-name descname">roll_dice</code><span class="sig-paren">(</span><em class="sig-param">dice_to_roll</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.roll_dice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rolls dice specified by the dice_to_roll list, updates related class attributes, and calculates the theoretical scorecard values.</p>
@@ -408,10 +431,36 @@ Theoretical Scorecard indices are as follows:</p>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> – If the number of rolls remaining is less than or equal to 0.</p></li>
+<li><p><strong>TypeError</strong> – If dice_to_roll is not a list.</p></li>
 <li><p><strong>ValueError</strong> – If the length of dice_to_roll is not 5.</p></li>
 <li><p><strong>TypeError</strong> – If the dice_to_roll list does not contain only bool values.</p></li>
 <li><p><strong>ValueError</strong> – If the player attempts to roll fewer than 5 dice on the first roll of their turn.</p></li>
-<li><p><strong>TypeError</strong> – If dice_to_roll is not a list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.set_dice_to_reroll">
+<code class="sig-name descname">set_dice_to_reroll</code><span class="sig-paren">(</span><em class="sig-param">index</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.set_dice_to_reroll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list to be passed into roll_dice() created based on the selection of an entry in the theoretical scorecard.</p>
+<p>This method can only be called after the dice have been rolled for the first time. It takes an index of the theoretical scorecard
+as a parameter, translates the indices of the dice stored on the theoretical scorecard at that index, and returns a list of dice
+to be rerolled, where the indices on the chosen entry of the theoretical scroecard are marked “False” so as to not be rerolled.
+This method does not have to be used - an algorithm could vary in how it chooses which dice to reroll - this simply provides an
+easier way to choose based on the theoretical scorecard state after each roll. Keep in mind, you can reroll any dice at any point -
+just because you don’t reroll one the first time doesn’t mean you can’t pick a different index the second time and reroll that one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Index of the theoretical scorecard corresponding to the dice not to be rerolled.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of boolean values formatted properly for the roll_dice() method.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the index is not between 0 and 12 inclusive.</p></li>
+<li><p><strong>ValueError</strong> – If the method is called before the first roll of the turn.</p></li>
 </ul>
 </dd>
 </dl>

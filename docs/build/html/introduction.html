@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction &mdash; Yahtzee API 0.1.2 documentation</title>
+  <title>Introduction &mdash; Yahtzee API 0.2.0 documentation</title>
   
 
   
@@ -86,6 +86,8 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#github-repo">GitHub Repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-note-on-versioning">A Note on Versioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
 </ul>
 </li>
@@ -157,11 +159,20 @@
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p>Welcome to the Yahtzee API! This package provides the core functionalities to programmatically play a game of Yahtzee.
-The stated purpose of this package is for use with custom OpenAI Gym reinforcement learning environments (in development), however it is generalized for many different use cases, including simple algorithm development.</p>
+<p>Welcome to the Yahtzee API! This package provides the core functionalities to programmatically play a game of Yahtzee. The purpose of this package is for use with custom OpenAI Gym reinforcement learning environments (in development), however it is generalized for many different use cases including simple algorithm development. Currently the API is still pre version 1.0.0 and is being iterated rapidly so stability should not be taken for granted until 1.0.0 is released. See below for a further note on versioning.
+Instantiating a Game object will create a list of Player objects that can be interacted with using the methods outlined in these docs. Click into the links on the left panel for a detailed description of the public methods and attributes for each class.</p>
 <div class="section" id="github-repo">
 <h2>GitHub Repo<a class="headerlink" href="#github-repo" title="Permalink to this headline">¶</a></h2>
-<p>To view the source code for the Yahtzee API, visit the GitHub repo here <a class="reference external" href="https://github.com/tomarbeiter/yahtzee_api">here</a>.</p>
+<p>To view the source code and examples for the Yahtzee API, visit the GitHub repo here <a class="reference external" href="https://github.com/tomarbeiter/yahtzee_api">here</a>.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>To install this package, run: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">yahtzee-api</span></code></p>
+</div>
+<div class="section" id="a-note-on-versioning">
+<h2>A Note on Versioning<a class="headerlink" href="#a-note-on-versioning" title="Permalink to this headline">¶</a></h2>
+<p>This project is my first headfirst dive into the world of publishing Python packages, using Sphinx for documentation, GitHub Actions, etc. As such, there are plenty of junk commits and mistakes in the repo. I’ve done my best to clean it up and make sure that what is presented is accurate, up-to-date, and at least somewhat helpful.
+Canonically, v0.1.2 is the first release of this package. Yes, v0.1.0 and v0.1.1 existed, but both fell victim to my inexperience with Python publishing (amongst other things). From v0.1.2 on, all changes and versioning will following semantic versioning guidelines specified by <a class="reference external" href="https://semver.org/">semver</a>.</p>
 </div>
 <div class="section" id="contact">
 <h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
