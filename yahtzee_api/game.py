@@ -10,7 +10,6 @@ class Game:
     All algorithm development should happen through an instance of this class as it provides a rule-adhering structure and allows access to the Player object and its methods.
     
     Attributes:
-        players (list): A list of Player object instances, one for each participant. The player_name attribute is set to "P{index_in_players_list}" which can be used to distinguish players.
         remaining_turns (int): Global turn tracker.
         current_player (Player): The player who is currently rolling dice/scoring.
         num_players (int): Number of players in the game. 
@@ -23,9 +22,9 @@ class Game:
         Args:
             num_players (int): Number of players in the game.
         """
-        self.players = [Player("P" + str(i)) for i in range(num_players)]
+        self.__players = [Player("P" + str(i)) for i in range(num_players)]
         self.remaining_turns = 13
-        self.current_player = self.players[0]
+        self.current_player = self.__players[0]
         self.num_players = num_players
         self.winner = []
 
@@ -35,13 +34,13 @@ class Game:
         Once the 13th turn is completed, this method will automatically calculate the final scores and
         set the value of self.winner to the winner(s) Player object(s).
         """
-        if self.players.index(self.current_player) == self.num_players - 1:
+        if self.__players.index(self.current_player) == self.num_players - 1:
             self.remaining_turns -= 1
-            self.current_player = self.players[0]
+            self.current_player = self.__players[0]
             if self.remaining_turns == 0:
-                self._end_game()
+                self.__end_game()
         else:
-            self.current_player = self.players[self.players.index(self.current_player) + 1]
+            self.current_player = self.__players[self.__players.index(self.current_player) + 1]
 
     def print_status(self, file, overwrite=True):
         """Prints out the current moment-in-time status of the game to a specified file.
@@ -81,18 +80,18 @@ class Game:
                 f.write(player.player_name + "\n")
                 f.write("Scorecard:" + "\n")
                 for i in range(13):
-                    f.write(str(self.current_player.scorecard[i]) + "\n")
+                    f.write(str(player.scorecard[i]) + "\n")
                 f.write("\n")
             f.write("Score: " + str(self.winner[0].score) + "\n")
             f.write("-----------------------------------------")
             f.write("\n")
         f.close()
 
-    def _end_game(self):
+    def __end_game(self):
         """Computes final scores for each player and prints the results."""
         final_scores = []
-        for player in self.players:
+        for player in self.__players:
             player.calculate_final_score()
             final_scores.append(player.score)
-        self.winner = [player for player in self.players if player.score == max(final_scores)]
+        self.winner = [player for player in self.__players if player.score == max(final_scores)]
 
