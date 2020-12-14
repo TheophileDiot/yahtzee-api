@@ -13,10 +13,9 @@ class Player:
     Attributes:
         player_name (str): A string containing the name of the player.
         score (int): An integer value indicating the point total for the player (calculated at the end of the game).
-        scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, with each row (inner list) of the card following this structure: 
-        [score, [dice used to get score], number of rolls]. This is updated when a player ends their turn with the end_turn() method.
+        scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, with each row (inner list) of the card following this structure: [score, [dice used to get score], number of rolls]. This is updated when a player ends their turn with the end_turn() method.
             
-        Scorecard indices are as follows:
+            Scorecard indices are as follows:
 
             [0]: 1's 
 
@@ -44,9 +43,9 @@ class Player:
 
             [12]: Chance
 
-        theoretical_scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure: [score, [indices in self.dice of dice used to get score], number of rolls]. This is calculated after every roll and can be used to make decisions about which dice to roll again,
-        which score to take, and more. This scorecard stores the indices of the dice, rather than the dice values themselves, to make it more useful for choosing which dice to reroll based on what score entry the player wants to pursue.
-        Theoretical Scorecard indices are as follows:
+        theoretical_scorecard (list): A list of lists tracking each row of a Yahtzee scorecard, calculated after each roll, with each row of the card following this structure: [score, [indices in self.dice of dice used to get score], number of rolls]. This is calculated after every roll and can be used to make decisions about which dice to roll again, which score to take, and more. This scorecard stores the indices of the dice, rather than the dice values themselves, to make it more useful for choosing which dice to reroll based on what score entry the player wants to pursue.
+            
+            Theoretical Scorecard indices are as follows:
             
             [0]: 1's
 
@@ -118,7 +117,7 @@ class Player:
         self.dice = [0, 0, 0, 0, 0]         # Master list of dice - index matters, and these dice are preserved positionally in all scoring and rolling calculations
         self.rolls_left = 3  
         self.__sorted_dice = []              # Sorted version of master dice list to make some scoring calculations easier. Index does not matter in this list - calculations are performed with sorted list then mapped back to the indices of master list
-              
+        self.__bonus = False      
          
     def roll_dice(self, dice_to_roll):
         """Rolls dice specified by the dice_to_roll list, updates related class attributes, and calculates the theoretical scorecard values.
@@ -193,23 +192,10 @@ class Player:
         self.scorecard[score_type][0] = self.theoretical_scorecard[score_type][0]
         self.scorecard[score_type][1] = copy.deepcopy(self.dice)
         self.scorecard[score_type][2] = 3 - self.rolls_left
+        self.__calculate_bonus()
         self.rolls_left = 3 
         self.dice = copy.deepcopy([0, 0, 0, 0, 0])
         self.__reset_theoretical_scorecard()
-    
-    def calculate_final_score(self):
-        """Sums the total points a player has scored and stores it in the Player.score attribute.
-        
-        This function can only be called at the end of the game when all 13 scorecard values have been scored. 
-        
-        Raises:
-            ValueError: If scorecard is not complete (implying the game is not over).
-        """
-        for entry in self.scorecard:
-            if entry[2] == 0:
-                raise ValueError("Error in Player.calculate_final_score(): Player has unscored entries on scorecard.")
-            self.score += entry[0]
-        self.__calculate_bonus()
 
     def __reset_theoretical_scorecard(self):
         """Resets the theoretical scorecard. Called after each roll of the dice."""
@@ -320,15 +306,13 @@ class Player:
             self.theoretical_scorecard[12][2] = 3 - self.rolls_left
 
     def __calculate_bonus(self):
-        """Determines if Player has earned the top-half bonus by scoring at least 63 points on the first 6 scorecard entries.
-        
-        Function is called at the end of the game when the final score is being tallied.
-        """
+        """Determines if Player has earned the top-half bonus by scoring at least 63 points on the first 6 scorecard entries."""
         total = 0
         for i in range(6):
             total += self.scorecard[i][0]
-        if total >= 63:
+        if total >= 63 and not self.__bonus:
             self.score += 35
+            self.bonus = True
 
     def __calculate_yahtzee_bonus(self):
         """Adds Yahtzee bonus to Player's total score when earned.

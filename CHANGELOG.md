@@ -8,10 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Adding
 - Ability to specify which Yahtzee rule variant the instantiated Game object should adhere to.
 
-### Changing
+## [1.0.0] - 
+### Changed
 - Make Game.players attribute private.
 - Check if the top-half 35-point bonus is won after each turn, instead of at the end of the game.
-- Shorten some public method names to improve readability and usability. 
+
+### Removed
+- Player.calulcate_final_score() method (unnecessary).
+
 
 ## [0.2.0] - 2020-12-11
 ### Added

@@ -88,10 +88,3 @@ class TestPlayer:
 
         with pytest.raises(ValueError):
             p.end_turn(13)
-
-    def test_calculate_final_score_unscored_entries(self):
-        """Tests ValueError when calculate_final_score() is called before game is over."""
-        p = Player("Tom")
-        with pytest.raises(ValueError):
-            p.calculate_final_score()
-        

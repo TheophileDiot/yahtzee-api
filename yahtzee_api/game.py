@@ -91,7 +91,7 @@ class Game:
         """Computes final scores for each player and prints the results."""
         final_scores = []
         for player in self.__players:
-            player.calculate_final_score()
+            for entry in player.scorecard:
+                player.score += entry[0]
             final_scores.append(player.score)
         self.winner = [player for player in self.__players if player.score == max(final_scores)]
-
