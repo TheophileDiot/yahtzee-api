@@ -43,8 +43,9 @@ class Game:
             self.current_player = self.__players[self.__players.index(self.current_player) + 1]
 
     def print_status(self, file, overwrite=True):
-        """Prints out the current moment-in-time status of the game to a specified file.
+        """Prints out the current moment-in-time status of the game to a specified file. 
         
+        This should be called before a player chooses their score to view maximum detail.
         Args: 
             file (str): Filename to write to.
             overwrite (bool, optional): Whether or not to overwrite existing file data. Defaults to True.
@@ -53,7 +54,6 @@ class Game:
             f.write("Current Turn: " + str(13 - self.remaining_turns + 1) + "\n")
             f.write("Turns Remaining: " + str(self.remaining_turns - 1) + "\n")
             f.write("Current Player: " + self.current_player.player_name + "\n")
-            f.write("Current dice: " + str(self.current_player.dice) + "\n")
             f.write("Rolls left this turn: " + str(self.current_player.rolls_left) + "\n")
             f.write("Scorecard:" + "\n")
             for i in range(13):

@@ -4,18 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unrealeased
-### Adding
-- Ability to specify which Yahtzee rule variant the instantiated Game object should adhere to.
 
 ## [1.0.0] - 
 ### Changed
 - Make Game.players attribute private.
 - Check if the top-half 35-point bonus is won after each turn, instead of at the end of the game.
+- Adheres to 1961 Joker rules for extra Yahtzee's.
+- Rework Theoretical scorecard so dice used in calculation are marked with a 1 instead of storing the actual indices.
+- Rolling is now based on 0 (roll) and 1 (don't roll) instead of True/False.
 
 ### Removed
 - Player.calulcate_final_score() method (unnecessary).
-
+- Player.set_dice_to_reroll() method.
 
 ## [0.2.0] - 2020-12-11
 ### Added

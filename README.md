@@ -10,6 +10,9 @@ To install this package, run `pip install yahtzee-api`
 ### Documentation
 For complete documentation on the current API methods, please visit https://yahtzee-api.tomarbeiter.com.
 
+### Rules
+This API adheres to the rules of Yahtzee outliend here: https://www.hasbro.com/common/instruct/yahtzee.pdf.
+
 ### Example
 The following is an example of a simple (and really poorly performing!) algorithm playing a 1-player game of Yahtzee with the Yahtzee API:
 
