@@ -5,13 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.0.0] - 
+## [1.0.0] - 2021-1-23
 ### Changed
 - Make Game.players attribute private.
 - Check if the top-half 35-point bonus is won after each turn, instead of at the end of the game.
 - Adheres to 1961 Joker rules for extra Yahtzee's.
 - Rework Theoretical scorecard so dice used in calculation are marked with a 1 instead of storing the actual indices.
 - Rolling is now based on 0 (roll) and 1 (don't roll) instead of True/False.
+- Cleaned code for PEP 8 conformity.
+- Renamed Player.roll_dice() to Player.roll()
+- Renamed Player.theoretical_scorecard to t_scorecard
+- Renamed Game.current_player() to Game.c_player()
 
 ### Removed
 - Player.calulcate_final_score() method (unnecessary).
