@@ -249,7 +249,7 @@ class Player:
                 # Only one three of a kind can exist, so once it is found
                 # update the theoretical scorecard and return.
                 if dice_indices.count(1) == 3:
-                    self.t_scorecard[6][0] = 3 * (i + 1)
+                    self.t_scorecard[6][0] = sum(self.dice)
                     self.t_scorecard[6][1] = dice_indices
                     self.t_scorecard[6][2] = 3 - self.rolls_left
                     return
@@ -272,7 +272,7 @@ class Player:
                 # Only one four of a kind can exist, so once it is found update
                 # the theoretical scorecard and return.
                 if dice_indices.count(1) == 4:
-                    self.t_scorecard[7][0] = 4 * (i + 1)
+                    self.t_scorecard[7][0] = sum(self.dice)
                     self.t_scorecard[7][1] = dice_indices
                     self.t_scorecard[7][2] = 3 - self.rolls_left
                     return
