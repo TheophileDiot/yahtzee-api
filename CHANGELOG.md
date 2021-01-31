@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2021-1-31
+### Fixed
+- 3 and 4 of a Kind scoring functions now properly score all 5 dice, not just the 3/4 of a kind.
 
 ## [1.0.0] - 2021-1-23
 ### Changed

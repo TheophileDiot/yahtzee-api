@@ -40,7 +40,7 @@ for i in range(13):
 
 game.print_final("test.txt", True)
 ```
-This algorithm is obviously not going to win you any Yahtzee games (it never even rerolls the dice!), but demonstrates some of the core functionalities of the API. I recommend viewing the documentation in tandem with this example to fully understand what each method does/returns. This example will be expanded and imporved as the API approaches its first stable release. 
+This algorithm is obviously not going to win you any Yahtzee games (it never even rerolls the dice!), but demonstrates some of the core functionalities of the API. I recommend viewing the documentation in tandem with this example to fully understand what each method does/returns.
 
 ### A Note on Versioning
 This project is my first headfirst dive into the world of publishing Python packages, using Sphinx for documentation, GitHub Actions, etc. As such, there are plenty of junk commits and mistakes in the repo. I've done my best to clean it up and make sure that what is presented is accurate, up-to-date, and at least somewhat helpful. 
