@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='yahtzee_api',
-    version='1.0.2',
+    version='1.0.3',
     description="""A general purpose API to play an n-player game of Yahtzee
                     programmatically. Useful for algorithm development,
                     intended for future use with RL environments.""",
