@@ -1,5 +1,6 @@
 import random
 import copy
+from collections import Counter
 from .constants import (BAD_LENGTH, BAD_SCORE_TYPE, BAD_TYPE,
                         NO_BINARY, NO_ROLLS_LEFT, ALL_DICE)
 
@@ -140,7 +141,8 @@ class Player:
         self.dice = [0, 0, 0, 0, 0]
         self.rolls_left = 3
         self._sorted_dice = []
-        self._bonus = False
+        self.bonus = False
+        self.yahtzee_bonus = False
 
     def roll(self, to_roll):
         """Rolls dice specified by the to_roll list, updates related class
@@ -233,6 +235,17 @@ class Player:
                 self.t_scorecard[i][1] = dice_indices
                 self.t_scorecard[i][2] = 3 - self.rolls_left
 
+    def _kind_recommendation(self, idx):
+        """Helper method for 3 and 4 of a kind to recommend keeper dice."""
+        count = []
+        for i in range(5):
+            count.append(self.dice.count(i + 1))
+        max_value = max(count)
+        # Get all occurrances of max value, choose the highest index
+        indices = [i for i in range(5) if count[i] == max_value]
+        max_index = max(indices)
+        self.t_scorecard[idx][1] = [1 if self.dice[i] == max_index + 1 else 0 for i in range(5)]
+
     def _calculate_three_kind(self):
         """Calculates three of a kind value based on the current roll and
         stores result in the theoretical scorecard.
@@ -253,6 +266,8 @@ class Player:
                     self.t_scorecard[6][1] = dice_indices
                     self.t_scorecard[6][2] = 3 - self.rolls_left
                     return
+            # Make a recommendation to keep the highest dice value to pursue 3oaK
+            self._kind_recommendation(6)
             # Set the rolls used so far even if we don't have a 3 of a kind.
             self.t_scorecard[6][2] = 3 - self.rolls_left
 
@@ -276,8 +291,43 @@ class Player:
                     self.t_scorecard[7][1] = dice_indices
                     self.t_scorecard[7][2] = 3 - self.rolls_left
                     return
+                
+            # Make a recommendation to keep the highest dice value to pursue 4oaK    
+            self._kind_recommendation(7)
             # Set the rolls used even if we don't have a 4 of a kind.
             self.t_scorecard[7][2] = 3 - self.rolls_left
+
+    def _fh_recommendation(self):
+        """Generate recommendations for pursuing a full house."""
+        # no pairs:
+        set_dice = set(self.dice)
+        if len(set_dice) == len(self.dice):
+            keep = random.randint(min(self.dice), max(self.dice))
+            self.t_scorecard[8][1] = [1 if keep == self.dice[j] else 0
+                                for j in range(5)]
+        pairs = set([x for x in self.dice if self.dice.count(x) == 2])
+        # One pair:
+        if len(pairs) == 1:
+            self.t_scorecard[8][1] = [1 if list(pairs)[0] == self.dice[j] else 0
+                                for j in range(5)]
+        # Two pair
+        if len(pairs) == 2: 
+            self.t_scorecard[8][1] = [1 if list(pairs)[0] == self.dice[j]
+                                or list(pairs)[1] == self.dice[j] else 0
+                                for j in range(5)]
+        # Three of a kind
+        threes = set([x for x in self.dice if self.dice.count(x) == 3])
+        if len(threes) == 1:
+            self.t_scorecard[8][1] = [1 if list(threes)[0] == self.dice[j] else 0
+                                for j in range(5)]
+        # Four of a kind
+        fours = set([x for x in self.dice if self.dice.count(x) == 4])
+        if len(fours) == 1:
+            # Want to save the odd die out to try and get it a pair
+            self.t_scorecard[8][1] = [1, 1, 1, 1, 1]
+            # Make one of those a 0 because we only want 3
+            self.t_scorecard[8][1][self.dice.index(list(fours)[0])] = 0
+
 
     def _calculate_full_house(self):
         """Calculates full house based on current roll (uses sorted dice) and
@@ -295,18 +345,56 @@ class Player:
                     self._sorted_dice[0] != self._sorted_dice[4]):
                 self.t_scorecard[8][0] = 25
                 self.t_scorecard[8][1] = [1, 1, 1, 1, 1]
-            if (self._sorted_dice[0] == self._sorted_dice[2] and
+            elif (self._sorted_dice[0] == self._sorted_dice[2] and
                     self._sorted_dice[3] == self._sorted_dice[4] and
                     self._sorted_dice[0] != self._sorted_dice[4]):
                 self.t_scorecard[8][0] = 25
                 self.t_scorecard[8][1] = [1, 1, 1, 1, 1]
+            else:
+                self._fh_recommendation()
             # Set the rolls used even if we don't have a full house.
             self.t_scorecard[8][2] = 3 - self.rolls_left
+
+    def _st_recommendation(self, type, idx):
+        """Generates recommendations for dice to reroll to pursue small straight.
+        Sets any duplicates to a reroll, and compares distance between max and min value.
+        
+        Type: small/large
+        idx: 9/10
+        """
+        # Set everything to 1 to start (its just easier...)
+        self.t_scorecard[idx][1] = [1, 1, 1, 1, 1]
+        # Reroll duplicates
+        for i in range(6):
+            start = 0
+            loc = -1
+            first = True
+            for j in range(5):
+                try:
+                    loc = self.dice.index(i + 1, start)
+                    # if it is not the first occurance and not in the last position
+                    if not first and loc != len(self.dice) - 1:
+                        self.t_scorecard[idx][1][loc] = 0
+                    elif not first and loc == len(self.dice) - 1:
+                        break
+                    else:
+                        first = False
+                    start = loc + 1
+                except ValueError:
+                    loc = -1
+                
+        # Compare min/max
+        max_val = max(self.dice)
+        min_val = min(self.dice)
+        if max_val - min_val > 3 and type == "small":
+            self.t_scorecard[idx][1][self.dice.index(min_val)] = 0
+        elif max_val - min_val > 4 and type == "large":
+            self.t_scorecard[idx][1][self.dice.index(min_val)] = 0
 
     def _calculate_small_straight(self):
         """Calculates small straight based on current roll
         (uses sorted dice and additionally removes duplicates)
-        and storeS result in the theoretical scorecard.
+        and stores result in the theoretical scorecard.
         """
         # Checks if scorecard entry has not been scored yet.
         # Looks at # of rolls in case of a 0 on an entry after 3 rolls.
@@ -339,6 +427,9 @@ class Player:
                         dice_indices[self.dice.index(elt)] = 1
                 self.t_scorecard[9][0] = 30
                 self.t_scorecard[9][1] = dice_indices
+            else:
+                self._st_recommendation("small", 9)
+
             # Set the rolls used even if we don't have a small straight.
             self.t_scorecard[9][2] = 3 - self.rolls_left
 
@@ -354,41 +445,54 @@ class Player:
                 self.t_scorecard[10][0] = 40
                 self.t_scorecard[10][1] = [1, 1, 1, 1, 1]
             # Set the rolls used even if we don't have a large straight.
+            else:
+                self._st_recommendation("large", 10)
             self.t_scorecard[10][2] = 3 - self.rolls_left
+
+    def _yahtzee_recommendation(self):
+        """Generates reroll to puruse a yahtzee."""
+        # Find whichever dice has the highest current count
+        count = Counter(self.dice)
+        common = count.most_common(1)[0][0]
+        self.t_scorecard[11][1] = [1 if common == self.dice[j] else 0
+                                for j in range(5)]
 
     def _calculate_yahtzee(self):
         """Calculates Yahtzee based on current roll/frozen dice combo
         (uses sorted dice) and store result in theoretical scorecard.
         """
-        if self.scorecard[11][2] == 0:
-            if self._sorted_dice[0] == self._sorted_dice[-1]:
+        if self._sorted_dice[0] == self._sorted_dice[-1]:
+            if self.scorecard[11][2] == 0:
                 self.t_scorecard[11][0] = 50
                 self.t_scorecard[11][1] = [1, 1, 1, 1, 1]
-            # Set the rolls used even if we don't have a yahtzee.
-            self.t_scorecard[11][2] = 3 - self.rolls_left
         # If the number making the Yahtzee has been scored in the upper half,
         # Joker rules apply.
-        elif self.scorecard[self.dice[0] - 1][2] != 0:
-            if self.scorecard[6][2] == 0:
-                self.t_scorecard[6][0] = sum(self.dice)
-                self.t_scorecard[6][1] = [1, 1, 1, 1, 1]
-                self.t_scorecard[6][2] = 3 - self.rolls_left
-            if self.scorecard[7][2] == 0:
-                self.t_scorecard[7][0] = sum(self.dice)
-                self.t_scorecard[7][1] = [1, 1, 1, 1, 1]
-                self.t_scorecard[7][2] = 3 - self.rolls_left
-            if self.scorecard[8][2] == 0:
-                self.t_scorecard[8][0] = 25
-                self.t_scorecard[8][1] = [1, 1, 1, 1, 1]
-                self.t_scorecard[8][2] = 3 - self.rolls_left
-            if self.scorecard[9][2] == 0:
-                self.t_scorecard[9][0] = 30
-                self.t_scorecard[9][1] = [1, 1, 1, 1, 1]
-                self.t_scorecard[9][2] = 3 - self.rolls_left
-            if self.scorecard[10][2] == 0:
-                self.t_scorecard[10][0] = 40
-                self.t_scorecard[10][1] = [1, 1, 1, 1, 1]
-                self.t_scorecard[10][2] = 3 - self.rolls_left
+            elif self.scorecard[self.dice[0] - 1][2] != 0:
+                self.yahtzee_bonus = True
+                if self.scorecard[6][2] == 0:
+                    self.t_scorecard[6][0] = sum(self.dice)
+                    self.t_scorecard[6][1] = [1, 1, 1, 1, 1]
+                    self.t_scorecard[6][2] = 3 - self.rolls_left
+                if self.scorecard[7][2] == 0:
+                    self.t_scorecard[7][0] = sum(self.dice)
+                    self.t_scorecard[7][1] = [1, 1, 1, 1, 1]
+                    self.t_scorecard[7][2] = 3 - self.rolls_left
+                if self.scorecard[8][2] == 0:
+                    self.t_scorecard[8][0] = 25
+                    self.t_scorecard[8][1] = [1, 1, 1, 1, 1]
+                    self.t_scorecard[8][2] = 3 - self.rolls_left
+                if self.scorecard[9][2] == 0:
+                    self.t_scorecard[9][0] = 30
+                    self.t_scorecard[9][1] = [1, 1, 1, 1, 1]
+                    self.t_scorecard[9][2] = 3 - self.rolls_left
+                if self.scorecard[10][2] == 0:
+                    self.t_scorecard[10][0] = 40
+                    self.t_scorecard[10][1] = [1, 1, 1, 1, 1]
+                    self.t_scorecard[10][2] = 3 - self.rolls_left
+        else:
+            self._yahtzee_recommendation()
+        # Set the rolls used even if we don't have a yahtzee.
+        self.t_scorecard[11][2] = 3 - self.rolls_left
 
     def _calculate_chance(self):
         """Calculates chance value and store result
@@ -406,7 +510,7 @@ class Player:
         total = 0
         for i in range(6):
             total += self.scorecard[i][0]
-        if total >= 63 and not self._bonus:
+        if total >= 63 and not self.bonus:
             self.score += 35
             self.bonus = True
 
