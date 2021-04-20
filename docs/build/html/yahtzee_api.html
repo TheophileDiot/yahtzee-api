@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yahtzee API &mdash; Yahtzee API 1.1.0 documentation</title>
+  <title>Yahtzee API &mdash; Yahtzee API 1.1.1 documentation</title>
   
 
   
@@ -387,6 +387,29 @@ on the current turn (there are 3 rolls per turn).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="yahtzee_api.player.Player.debug_roll">
+<code class="sig-name descname">debug_roll</code><span class="sig-paren">(</span><em class="sig-param">to_roll</em>, <em class="sig-param">dice</em><span class="sig-paren">)</span><a class="headerlink" href="#yahtzee_api.player.Player.debug_roll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rolls dice specified by the to_roll list, updates related class
+attributes, and calculates the theoretical scorecard values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>to_roll</strong> (<em>list</em>) – A list of length 5 containing binary values
+where 0 indicates the die in that position should be rolled.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the number of rolls remaining is &lt;= 0.</p></li>
+<li><p><strong>TypeError</strong> – If to_roll is not a list.</p></li>
+<li><p><strong>ValueError</strong> – If the length of to_roll is not 5.</p></li>
+<li><p><strong>TypeError</strong> – If the to_roll list is not only binary values.</p></li>
+<li><p><strong>ValueError</strong> – If the player attempts to roll fewer than 5 dice on
+    the first roll of their turn.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

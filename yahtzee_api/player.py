@@ -180,6 +180,40 @@ class Player:
         self._reset_t_scorecard()
         self._calculate_t_scorecard()
 
+    def debug_roll(self, to_roll, dice):
+        """Rolls dice specified by the to_roll list, updates related class
+        attributes, and calculates the theoretical scorecard values.
+
+        Args:
+            to_roll (list): A list of length 5 containing binary values
+                where 0 indicates the die in that position should be rolled.
+
+        Raises:
+            ValueError: If the number of rolls remaining is <= 0.
+            TypeError: If to_roll is not a list.
+            ValueError: If the length of to_roll is not 5.
+            TypeError: If the to_roll list is not only binary values.
+            ValueError: If the player attempts to roll fewer than 5 dice on
+                the first roll of their turn.
+        """
+        if self.rolls_left <= 0:
+            raise ValueError(NO_ROLLS_LEFT)
+        if not isinstance(to_roll, list):
+            raise TypeError(BAD_TYPE)
+        if len(to_roll) != 5:
+            raise ValueError(BAD_LENGTH)
+        if len([x for x in to_roll if x not in [0, 1]]) != 0:
+            raise TypeError(NO_BINARY)
+        if self.rolls_left == 3 and len([x for x in to_roll if x != 0]) > 0:
+            raise ValueError(ALL_DICE)
+        self.dice = dice
+        self.rolls_left -= 1
+        self._sorted_dice = copy.deepcopy(self.dice)
+        self._sorted_dice.sort()
+        self._calculate_yahtzee_bonus()
+        self._reset_t_scorecard()
+        self._calculate_t_scorecard()
+
     def end_turn(self, score_type):
         """Resets turn-based parameters and fills in scorecard based on player choice.
 
@@ -369,14 +403,14 @@ class Player:
             start = 0
             loc = -1
             first = True
-            for j in range(5):
+            for _ in range(5):
                 try:
                     loc = self.dice.index(i + 1, start)
                     # if it is not the first occurance and not in the last position
-                    if not first and loc != len(self.dice) - 1:
+                    if not first:
                         self.t_scorecard[idx][1][loc] = 0
-                    elif not first and loc == len(self.dice) - 1:
-                        break
+                        if loc == len(self.dice) - 1:
+                            break
                     else:
                         first = False
                     start = loc + 1
@@ -387,9 +421,9 @@ class Player:
         max_val = max(self.dice)
         min_val = min(self.dice)
         if max_val - min_val > 3 and type == "small":
-            self.t_scorecard[idx][1][self.dice.index(min_val)] = 0
+            self.t_scorecard[9][1][self.dice.index(min_val)] = 0
         elif max_val - min_val > 4 and type == "large":
-            self.t_scorecard[idx][1][self.dice.index(min_val)] = 0
+            self.t_scorecard[10][1][self.dice.index(min_val)] = 0
 
     def _calculate_small_straight(self):
         """Calculates small straight based on current roll
